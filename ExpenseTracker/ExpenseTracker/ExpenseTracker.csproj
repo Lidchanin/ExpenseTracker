@@ -10,6 +10,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
+    <PackageReference Include="PropertyChanged.Fody" Version="2.6.1" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.344457" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Models\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EFModel1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EFModel1.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="EFModel1.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EFModel1.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
