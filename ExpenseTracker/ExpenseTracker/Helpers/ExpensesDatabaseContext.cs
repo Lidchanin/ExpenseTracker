@@ -59,6 +59,66 @@ namespace ExpenseTracker.Helpers
                 .WithMany(c => c.Expenses)
                 .HasForeignKey(e => e.CategoryId)
                 .IsRequired();
+
+            InitializeDefaultCategories(modelBuilder);
+            InitializeDefaultCategoryIcons(modelBuilder);
+            InitializeDefaultExpenses(modelBuilder);
         }
+
+        #region Private methods
+
+        private static void InitializeDefaultCategories(ModelBuilder modelBuilder)
+        {
+            var defaultCategories = new[]
+            {
+                new Category {Id = 1, Name = "Transport", CategoryIconId = 1},
+                new Category {Id = 2, Name = "Entertainment", CategoryIconId = 2},
+                new Category {Id = 3, Name = "Food", CategoryIconId = 3},
+                new Category {Id = 4, Name = "House", CategoryIconId = 4},
+                new Category {Id = 5, Name = "Medicine", CategoryIconId = 5},
+                new Category {Id = 6, Name = "Taxi", CategoryIconId = 6},
+            };
+
+            modelBuilder.Entity<Category>().HasData(defaultCategories);
+        }
+
+        private static void InitializeDefaultCategoryIcons(ModelBuilder modelBuilder)
+        {
+            var defaultCategoryIcons = new[]
+            {
+                new CategoryIcon {Id = 1, FilenameOrFilepath = ConstantHelper.CarIcon},
+                new CategoryIcon {Id = 2, FilenameOrFilepath = ConstantHelper.CarouselIcon},
+                new CategoryIcon {Id = 3, FilenameOrFilepath = ConstantHelper.CutleryIcon},
+                new CategoryIcon {Id = 4, FilenameOrFilepath = ConstantHelper.HouseIcon},
+                new CategoryIcon {Id = 5, FilenameOrFilepath = ConstantHelper.MedicineIcon},
+                new CategoryIcon {Id = 6, FilenameOrFilepath = ConstantHelper.TaxiIcon}
+            };
+
+            modelBuilder.Entity<CategoryIcon>().HasData(defaultCategoryIcons);
+        }
+
+        //todo [TestData]
+        private static void InitializeDefaultExpenses(ModelBuilder modelBuilder)
+        {
+            var defaultExpenses = new[]
+            {
+                new Expense{Id = 1, Name = "milk", Cost = 1.23, Timestamp = new DateTime(2019, 1, 1), CategoryId = 3}, 
+                new Expense{Id = 2, Name = "meat", Cost = 5.27, Timestamp = new DateTime(2019, 1, 31), CategoryId = 3}, 
+
+                new Expense{Id = 3, Name = "meat", Cost = 1.23, Timestamp = new DateTime(2019, 3, 1), CategoryId = 3}, 
+                new Expense{Id = 4, Cost = 150, Timestamp = new DateTime(2019, 3, 2), CategoryId = 1}, 
+                new Expense{Id = 5, Name = "vegetables", Cost = 1.23, Timestamp = new DateTime(2019, 3, 3), CategoryId = 3},
+
+                new Expense{Id = 6, Cost = 15, Timestamp = new DateTime(2019, 5, 15), CategoryId = 5}, 
+                new Expense{Id = 7, Name = "Pills", Cost = 1.23, Timestamp = new DateTime(2019, 5, 15), CategoryId = 5}, 
+                new Expense{Id = 8, Name = "meat", Cost = 1.23, Timestamp = new DateTime(2019, 5, 15), CategoryId = 3},
+                new Expense{Id = 9, Cost = 123, Timestamp = new DateTime(2019, 5, 16), CategoryId = 5},
+                new Expense{Id = 10, Name = "Rent", Cost = 2230, Timestamp = new DateTime(2019, 5, 16), CategoryId = 4}, 
+            };
+
+            modelBuilder.Entity<Expense>().HasData(defaultExpenses);
+        }
+
+        #endregion Private methods
     }
 }

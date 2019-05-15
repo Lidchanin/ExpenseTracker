@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ExpenseTracker.Extensions;
 
 namespace ExpenseTracker.Helpers
 {
@@ -19,6 +20,12 @@ namespace ExpenseTracker.Helpers
 
 
         #endregion Instance
+
+        #region Temp region
+
+        private const string DebugTag = "=====" + nameof(ExpensesDatabaseHelper) + ": ";
+
+        #endregion Temp region
 
         public async Task Temp()
         {
@@ -78,56 +85,73 @@ namespace ExpenseTracker.Helpers
 
         #region Get
 
-        public async Task<List<Category>> GetCategoriesAsync()
+        public async Task<List<Category>> GetDataAsync()
         {
             using (var dbContext = await CreateContextAsync())
             {
-                using (var transaction = await dbContext.Database.BeginTransactionAsync())
+                try
                 {
-                    var categories = new List<Category>();
-                    try
-                    {
-                        categories = await dbContext.Categories.ToListAsync();
-
-                        transaction.Commit();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
+                    var categories = await dbContext
+                        .Categories
+                        .Include(c => c.Expenses)
+                        .Include(c => c.CategoryIcon)
+                        .ToListAsync();
 
                     return categories;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
         }
 
-        public async Task<List<Category>> GetCategoriesWithExpensesAsync()
+        public async Task<List<Expense>> GetDataAsync(DateTime startDate, DateTime endTime)
         {
             using (var dbContext = await CreateContextAsync())
             {
-                using (var transaction = await dbContext.Database.BeginTransactionAsync())
+                try
                 {
-                    var categories = new List<Category>();
-                    IQueryable<Category> qCategories;
-
-                    try
-                    {
-                        categories = await dbContext.Categories.Include(c => c.Expenses).ToListAsync();
-
-                        transaction.Commit();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-
-                    return categories;
+                    var expenses = await dbContext
+                        .Expenses
+                        .Include(e => e.Category)
+                        .ThenInclude(c => c.CategoryIcon)
+                        .Where(e => e.Timestamp >= startDate && e.Timestamp <= endTime)
+                        .ToListAsync();
+                    return expenses;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
         }
 
+        public async Task<List<IGrouping<Category, Expense>>> GetDataForMonthAsync(DateTime currentDateTime)
+        {
+            using (var dbContext = await CreateContextAsync())
+            {
+                try
+                {
+                    var expenses = await dbContext
+                        .Expenses
+                        .Where(e => e.Timestamp >= currentDateTime.ToBeginningOfMonth() &&
+                                    e.Timestamp <= currentDateTime.ToEndingOfMonth())
+                        .OrderByDescending(e=>e.Cost)
+                        .ThenBy(e=>e.Name)
+                        .GroupBy(e => e.Category)
+                        .ToListAsync();
+                    return expenses;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+        }
         #endregion Get
 
         #region Insert
@@ -138,25 +162,9 @@ namespace ExpenseTracker.Helpers
             {
                 try
                 {
-                    await dbContext.AddAsync(category);
-                    await dbContext.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            }
-        }
-
-        public async Task InsertCategoryIconAsync(CategoryIcon categoryIcon)
-        {
-            using (var dbContext = await CreateContextAsync())
-            {
-                try
-                {
-                    await dbContext.AddAsync(categoryIcon);
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.Categories.AddAsync(category);
+                    var count = await dbContext.SaveChangesAsync();
+                    Debug.WriteLine($"{DebugTag} {nameof(InsertCategoryAsync)}\nInserted {count} items");
                 }
                 catch (Exception e)
                 {
@@ -172,8 +180,9 @@ namespace ExpenseTracker.Helpers
             {
                 try
                 {
-                    await dbContext.AddAsync(expense);
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.Expenses.AddAsync(expense);
+                    var count = await dbContext.SaveChangesAsync();
+                    Debug.WriteLine($"{DebugTag} {nameof(InsertExpenseAsync)}\nInserted {count} items");
                 }
                 catch (Exception e)
                 {
@@ -184,6 +193,14 @@ namespace ExpenseTracker.Helpers
         }
 
         #endregion Insert
+
+        #region Update
+
+        #endregion Update
+
+        #region Delete
+
+        #endregion Delete
 
         #region Private methods
 

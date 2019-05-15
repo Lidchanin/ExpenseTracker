@@ -11,6 +11,51 @@
 
     <pages:BasePage.Content>
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            
+            <Label Text="{Binding SelectedDatePeriod}"
+                   Grid.Row="0"/>
+
+            <ListView ItemsSource="{Binding Categories}" 
+                      Grid.Row="1">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding CategoryIcon.Id}" BackgroundColor="DarkGreen" TextColor="White"/>
+                                <Image Source="{Binding CategoryIcon.FilenameOrFilepath}"/>
+                                <Label Text="{Binding Id}" BackgroundColor="Black" TextColor="White"/>
+                                <Label Text="{Binding Name}" BackgroundColor="Blue" TextColor="White"/>
+                                <Label Text="{Binding Expenses.Count}" BackgroundColor="Red" TextColor="White"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ScrollView Orientation="Horizontal"
+                        Grid.Row="2">
+                <StackLayout Orientation="Horizontal">
+                    <Entry Text="{Binding CategoryName}" Placeholder="CategoryName"/>
+                    <Entry Text="{Binding CategoryIcId}" Placeholder="CategoryIcId"/>
+                    <Button Text="Add category" Command="{Binding AddCategoryCommand}"/>
+                </StackLayout>
+            </ScrollView>
+
+            <ScrollView Orientation="Horizontal"
+                        Grid.Row="3">
+                <StackLayout Orientation="Horizontal">
+                    <Entry Text="{Binding ExpenseCatId}" Placeholder="cat_id"/>
+                    <Entry Text="{Binding ExpenseCost}" Placeholder="cost"/>
+                    <Entry Text="{Binding ExpenseName}" Placeholder="name"/>
+                    <Button Text="Add expense" Command="{Binding AddExpenseCommand}"/>
+                </StackLayout>
+            </ScrollView>
         </Grid>
     </pages:BasePage.Content>
 </pages:BasePage>

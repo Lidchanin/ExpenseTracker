@@ -166,4 +166,22 @@
   <ItemGroup>
     <BundleResource Include="Resources\ic_placeholder.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_car.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_carousel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_cutlery.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_house.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_medicine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_taxi.png" />
+  </ItemGroup>
 </Project>

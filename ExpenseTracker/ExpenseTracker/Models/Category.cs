@@ -13,5 +13,10 @@ namespace ExpenseTracker.Models
         public long CategoryIconId { get; set; }
 
         public CategoryIcon CategoryIcon { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
