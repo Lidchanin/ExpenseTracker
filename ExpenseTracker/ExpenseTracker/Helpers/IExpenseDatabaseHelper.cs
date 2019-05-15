@@ -10,6 +10,8 @@ namespace ExpenseTracker.Helpers
     /// </summary>
     public interface IExpenseDatabaseHelper
     {
+        #region Get
+
         Task<List<Category>> GetCategoriesAsync();
 
         //Task<List<Category>> GetCategoriesAsync(DateTime startDate, DateTime endDate);
@@ -18,16 +20,45 @@ namespace ExpenseTracker.Helpers
 
         //Task<List<Category>> GetCategoriesWithExpensesAsync(DateTime startDate, DateTime endDate);
 
+        //Task<List<CategoryIcon>> GetCategoryIconsAsync();
 
-        //Task InsertCategoryAsync(Category category);
+        //Task<CategoryIcon> GetCategoryIconAsync(Category category);
 
-        //Task InsertExpenseAsync(Expense expense);
+        //Task<CategoryIcon> GetCategoryIconAsync(long categoryId);
 
+        //Task<List<Expense>> GetExpensesAsync();
+
+        //Task<List<Expense>> GetExpensesAsync(Category category);
+
+        //Task<List<Expense>> GetExpensesAsync(Category category, DateTime startDate, DateTime endDate);
+
+        //Task<List<Expense>> GetExpensesAsync(long categoryId);
+
+        //Task<List<Expense>> GetExpensesAsync(long categoryId, DateTime startDate, DateTime endDate);
+
+        #endregion Get
+
+        #region Insert
+
+        Task InsertCategoryAsync(Category category);
+
+        Task InsertCategoryIconAsync(CategoryIcon categoryIcon);
+
+        Task InsertExpenseAsync(Expense expense);
+
+        #endregion Insert
+
+        #region Update
 
         //Task UpdateCategoryAsync(Category category);
+        
+        //Task UpdateCategoryIconAsync(CategoryIcon categoryIcon);
 
         //Task UpdateExpenseAsync(Expense expense);
 
+        #endregion Update
+
+        #region Delete
 
         //Task DeleteCategoryAsync(Category category);
 
@@ -36,5 +67,7 @@ namespace ExpenseTracker.Helpers
         //Task DeleteExpenseAsync(Expense expense);
 
         //Task DeleteExpenseAsync(long expenseId);
+    
+        #endregion Delete
     }
 }

@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <Folder Include="Controls\" />
-    <Folder Include="Models\" />
-    <Folder Include="Helpers\" />
+    <Folder Include="Converters\" />
+    <Folder Include="Extensions\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
@@ -39,5 +39,20 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>EFModel1.tt</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Pages\AboutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MasterPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\SettingsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\StartPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

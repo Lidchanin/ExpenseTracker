@@ -9,5 +9,9 @@ namespace ExpenseTracker.Models
         public string Name { get; set; }
 
         public ICollection<Expense> Expenses { get; set; }
+
+        public long CategoryIconId { get; set; }
+
+        public CategoryIcon CategoryIcon { get; set; }
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using ExpenseTracker.Pages;
-using Xamarin.Forms;
+﻿using ExpenseTracker.Pages;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace ExpenseTracker
 {
-    public partial class App : Application
+    public partial class App
     {
         public App()
         {

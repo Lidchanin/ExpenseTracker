@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
+             xmlns:models="clr-namespace:ExpenseTracker.Models;assembly=ExpenseTracker"
+             xmlns:pages="clr-namespace:ExpenseTracker.Pages;assembly=ExpenseTracker"
+             x:Class="ExpenseTracker.Pages.MasterPage"
+             Padding="0,40,0,0"
+             Title="MasterPage">
+
+    <ContentPage.Content>
+        <Grid>
+            <Label Text="Master Page Title"/>
+
+            <ListView x:Name="ListView"
+                      x:FieldModifier="public">
+                <ListView.ItemsSource>
+                    <x:Array Type="{x:Type models:MasterPageItem}">
+                        <models:MasterPageItem Title="Start page" 
+                                               IconSource="{x:Static helpers:ConstantHelper.ImagePlaceholder}" 
+                                               TargetType="{x:Type pages:StartPage}" />
+                        <models:MasterPageItem Title="About page" 
+                                               IconSource="{x:Static helpers:ConstantHelper.ImagePlaceholder}" 
+                                               TargetType="{x:Type pages:AboutPage}" />
+                        <models:MasterPageItem Title="Settings page" 
+                                               IconSource="{x:Static helpers:ConstantHelper.ImagePlaceholder}" 
+                                               TargetType="{x:Type pages:SettingsPage}" />
+                    </x:Array>
+                </ListView.ItemsSource>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Source="{Binding IconSource}" 
+                                       Grid.Column="0"/>
+                                <Label Text="{Binding Title}" 
+                                       Grid.Column="1"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -9,14 +9,10 @@ namespace ExpenseTracker.Helpers
     public class ExpensesDatabaseContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
+        public DbSet<CategoryIcon> CategoryIcons { get; set; }
         public DbSet<Expense> Expenses { get; set; }
 
         private const string DbName = "ExpensesTracker.db";
-
-        public ExpensesDatabaseContext()
-        {
-
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -44,10 +40,19 @@ namespace ExpenseTracker.Helpers
             modelBuilder.Entity<Category>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Category>().Property(c => c.Name).IsRequired();
 
+            modelBuilder.Entity<CategoryIcon>().HasKey(ci => ci.Id);
+            modelBuilder.Entity<CategoryIcon>().HasIndex(ci => ci.FilenameOrFilepath);
+
             modelBuilder.Entity<Expense>().HasKey(e => e.Id);
             modelBuilder.Entity<Expense>().Property(e => e.Name).IsRequired(false);
             modelBuilder.Entity<Expense>().Property(e => e.Cost).IsRequired();
             modelBuilder.Entity<Expense>().Property(e => e.Timestamp).IsRequired();
+
+            modelBuilder.Entity<Category>()
+                .HasOne(c => c.CategoryIcon)
+                .WithMany(ci => ci.Categories)
+                .HasForeignKey(c => c.CategoryIconId)
+                .IsRequired();
 
             modelBuilder.Entity<Expense>()
                 .HasOne(e => e.Category)

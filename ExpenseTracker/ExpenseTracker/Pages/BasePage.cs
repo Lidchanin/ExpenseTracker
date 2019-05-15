@@ -1,11 +1,10 @@
 ﻿using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace ExpenseTracker.Pages
 {
-    public class BasePage : ContentPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public abstract class BasePage : ContentPage
     {
-        public BasePage()
-        {
-        }
     }
 }

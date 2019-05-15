@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:pages="clr-namespace:ExpenseTracker.Pages;assembly=ExpenseTracker"
+                xmlns:viewModels="clr-namespace:ExpenseTracker.ViewModels;assembly=ExpenseTracker"
+                x:Class="ExpenseTracker.Pages.StartPage">
+
+    <pages:BasePage.BindingContext>
+        <viewModels:StartViewModel x:Name="ViewModel"/>
+    </pages:BasePage.BindingContext>
+
+    <pages:BasePage.Content>
+        <Grid>
+        </Grid>
+    </pages:BasePage.Content>
+</pages:BasePage>
