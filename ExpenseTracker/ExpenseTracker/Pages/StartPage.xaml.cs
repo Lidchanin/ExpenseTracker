@@ -18,94 +18,90 @@ namespace ExpenseTracker.Pages
         {
             base.OnAppearing();
 
-            var tempChartElements = new List<DonutChartElement>
+            var tempChartElements = new List<DonutChartItem>
             {
-                new DonutChartElement(300)
+                new DonutChartItem(300)
                 {
-                    Label = "0",
-                    ValueLabel = "100",
-                    Color = SKColors.DarkBlue
+                    PrimaryText = "0",
+                    SecondaryText = "100",
+                    SectionColor = SKColors.DarkBlue,
                 },
-                new DonutChartElement(300)
+                new DonutChartItem(300)
                 {
-                    Label = "1",
-                    ValueLabel = "100",
-                    Color = SKColors.Red
+                    PrimaryText = "1",
+                    SecondaryText = "100",
+                    SectionColor = SKColors.Red
                 },
-                new DonutChartElement(200)
+                new DonutChartItem(200)
                 {
-                    Label = "2",
-                    ValueLabel = "200",
-                    Color = SKColors.Blue
+                    PrimaryText = "2",
+                    SecondaryText = "200",
+                    SectionColor = SKColors.Blue
                 },
-                new DonutChartElement(300)
+                new DonutChartItem(300)
                 {
-                    Label = "3",
-                    ValueLabel = "300",
-                    Color = SKColors.Yellow
+                    PrimaryText = "3",
+                    SecondaryText = "300",
+                    SectionColor = SKColors.Yellow
                 },
-                new DonutChartElement(400)
+                new DonutChartItem(400)
                 {
-                    Label = "4",
-                    ValueLabel = "400",
-                    Color = SKColors.Green
+                    PrimaryText = "4",
+                    SecondaryText = "400",
+                    SectionColor = SKColors.Green
                 },
-                new DonutChartElement(400)
+                new DonutChartItem(400)
                 {
-                    Label = "5",
-                    ValueLabel = "400",
-                    Color = SKColors.Gray
+                    PrimaryText = "5",
+                    SecondaryText = "400",
+                    SectionColor = SKColors.Gray
                 },
-                new DonutChartElement(300)
+                new DonutChartItem(300)
                 {
-                    Label = "6",
-                    ValueLabel = "100",
-                    Color = SKColors.Red
+                    PrimaryText = "6",
+                    SecondaryText = "100",
+                    SectionColor = SKColors.Red
                 },
-                new DonutChartElement(200)
+                new DonutChartItem(200)
                 {
-                    Label = "7",
-                    ValueLabel = "200",
-                    Color = SKColors.Blue
+                    PrimaryText = "7",
+                    SecondaryText = "200",
+                    SectionColor = SKColors.Blue
                 },
-                new DonutChartElement(300)
+                new DonutChartItem(300)
                 {
-                    Label = "8",
-                    ValueLabel = "300",
-                    Color = SKColors.Yellow
+                    PrimaryText = "8",
+                    SecondaryText = "300",
+                    SectionColor = SKColors.Yellow
                 },
-                new DonutChartElement(400)
+                new DonutChartItem(400)
                 {
-                    Label = "9",
-                    ValueLabel = "400",
-                    Color = SKColors.Green
+                    PrimaryText = "9",
+                    SecondaryText = "400",
+                    SectionColor = SKColors.Green
                 },
-                new DonutChartElement(400)
+                new DonutChartItem(400)
                 {
-                    Label = "10",
-                    ValueLabel = "400",
-                    Color = SKColors.Gray
+                    PrimaryText = "10",
+                    SecondaryText = "400",
+                    SectionColor = SKColors.Gray
                 },
-                new DonutChartElement(400)
+                new DonutChartItem(400)
                 {
-                    Label = "11",
-                    ValueLabel = "400",
-                    Color = SKColors.DarkCyan
+                    PrimaryText = "11",
+                    SecondaryText = "400",
+                    SectionColor = SKColors.DarkCyan
                 },
-                new DonutChartElement(400)
+                new DonutChartItem(400)
                 {
-                    Label = "12",
-                    ValueLabel = "400",
-                    Color = SKColors.Gray
+                    PrimaryText = "12",
+                    SecondaryText = "400",
+                    SectionColor = SKColors.Gray
                 },
             };
 
-            DonutChartView.DonutChart = new DonutChart
-            {
-                ChartElements = tempChartElements,
-                LabelTextSize = 50f,
-                HoleRadius = 0.3f,
-            };
+            DonutChartView.HoleRadius = 0.3f;
+            DonutChartView.ItemSource = tempChartElements;
 
             DonutChartView.DonutSectorCommand = new Command(SectorTouchExecute);
             DonutChartView.DonutHoleCommand = new Command(HoleTouchExecute);
