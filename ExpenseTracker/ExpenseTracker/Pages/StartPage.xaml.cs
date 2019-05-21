@@ -185,7 +185,7 @@ namespace ExpenseTracker.Pages
             };
 
             DonutChartView.HoleRadius = 0.3f;
-            DonutChartView.HoleColor = SKColors.Black;
+            DonutChartView.HoleColor = SKColors.Transparent;
             DonutChartView.ItemSource = tempChartElements;
 
             DonutChartView.DonutSectorCommand = new Command(SectorTouchExecute);
@@ -195,6 +195,9 @@ namespace ExpenseTracker.Pages
             DonutChartView.HolePrimaryTextColor = SKColors.DarkBlue;
             DonutChartView.HoleSecondaryText = "0";
             DonutChartView.HoleSecondaryTextColor = SKColors.DarkRed;
+
+            DonutChartView.SeparatorsColor = SKColors.Black;
+            DonutChartView.SeparatorsWidth = 3f;
         }
 
         private async void SectorTouchExecute(object commandParameter)

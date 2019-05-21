@@ -185,10 +185,40 @@ namespace ExpenseTracker.Controls.DonutChart
 
         #endregion HoleSecondaryTextColor property
 
+        #region SeparatorsWidth property 
+
+        public static readonly BindableProperty SeparatorsWidthProperty = BindableProperty.Create(
+            nameof(SeparatorsWidth),
+            typeof(float),
+            typeof(DonutChartView),
+            2f);
+
+        public float SeparatorsWidth
+        {
+            get => (float) GetValue(SeparatorsWidthProperty);
+            set => SetValue(SeparatorsWidthProperty, value);
+        }
+
+        #endregion SeparatorsWidth property
+
+        #region SeparatorsColor property
+
+        public static readonly BindableProperty SeparatorsColorProperty = BindableProperty.Create(
+            nameof(SeparatorsColor),
+            typeof(SKColor),
+            typeof(DonutChartView),
+            SKColors.Black);
+
+        public SKColor SeparatorsColor
+        {
+            get => (SKColor) GetValue(SeparatorsColorProperty);
+            set => SetValue(SeparatorsColorProperty, value);
+        }
+
+        #endregion SeparatorsColor property
+
         #endregion Bindable Properties
 
-        private SKPath _holePath;
-        private List<SKPath> _sectorsPaths = new List<SKPath>();
         private readonly List<long> _touchIds = new List<long>();
 
         public DonutChartView()
@@ -241,15 +271,15 @@ namespace ExpenseTracker.Controls.DonutChart
                 touchLocation.X - CanvasSize.Width / 2,
                 touchLocation.Y - CanvasSize.Height / 2);
 
-            if (_holePath.Contains(translatedLocation.X, translatedLocation.Y))
+            if (DonutChartHelper.HolePath.Contains(translatedLocation.X, translatedLocation.Y))
             {
                 DonutHoleCommand.Execute(null);
                 return;
             }
 
-            for (var i = 0; i < _sectorsPaths.Count; i++)
+            for (var i = 0; i < DonutChartHelper.SectorsPaths.Count; i++)
             {
-                if (_sectorsPaths[i].Contains(translatedLocation.X, translatedLocation.Y))
+                if (DonutChartHelper.SectorsPaths[i].Contains(translatedLocation.X, translatedLocation.Y))
                 {
                     DonutSectorCommand.Execute(i);
                     return;
@@ -272,14 +302,19 @@ namespace ExpenseTracker.Controls.DonutChart
                 DrawSectors(canvas, outerRadius, innerRadius);
                 DrawHole(canvas, innerRadius);
                 DrawTextInHole(canvas, innerRadius);
+                DrawSeparators(canvas, outerRadius, innerRadius);
             }
         }
 
         private void DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius) =>
-            _sectorsPaths = DonutChartHelper.DrawSectors(canvas, outerRadius, innerRadius, ItemSource);
+            DonutChartHelper.DrawSectors(canvas, outerRadius, innerRadius, ItemSource);
+
+        private void DrawSeparators(SKCanvas canvas, float outerRadius, float innerRadius) =>
+            DonutChartHelper.DrawSeparators(canvas, outerRadius, innerRadius, SeparatorsColor, SeparatorsWidth,
+                ItemSource);
 
         private void DrawHole(SKCanvas canvas, float innerRadius) =>
-            _holePath = DonutChartHelper.DrawHole(canvas, innerRadius, HoleColor);
+            DonutChartHelper.DrawHole(canvas, innerRadius, HoleColor);
 
         private void DrawTextInHole(SKCanvas canvas, float innerRadius) =>
             DonutChartHelper.DrawTextInHole(canvas, innerRadius, HolePrimaryTextScale, HoleSecondaryTextScale,

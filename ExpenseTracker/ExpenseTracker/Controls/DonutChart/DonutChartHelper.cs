@@ -7,12 +7,15 @@ namespace ExpenseTracker.Controls.DonutChart
 {
     internal static class DonutChartHelper
     {
+        internal static readonly List<SKPath> SectorsPaths = new List<SKPath>();
+        internal static SKPath HolePath;
+
         private const float UprightAngle = 1.57079637050629f;
         private const float TotalAngle = 6.28318548202515f;
 
-        internal static SKPath DrawHole(SKCanvas canvas, float innerRadius, SKColor holeColor)
+        internal static void DrawHole(SKCanvas canvas, float innerRadius, SKColor holeColor)
         {
-            var holePath = CreateHolePath(innerRadius);
+            HolePath = CreateHolePath(innerRadius);
 
             using (var paint = new SKPaint
             {
@@ -21,17 +24,47 @@ namespace ExpenseTracker.Controls.DonutChart
                 IsAntialias = true
             })
             {
-                canvas.DrawPath(holePath, paint);
+                canvas.DrawPath(HolePath, paint);
             }
-
-            return holePath;
         }
 
-        internal static List<SKPath> DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius,
+        internal static void DrawSeparators(SKCanvas canvas, float outerRadius, float innerRadius,
+            SKColor separatorsColor, float separatorsWidth, IReadOnlyList<DonutChartItem> itemSource)
+        {
+            if (separatorsWidth <= 0 || separatorsColor == SKColors.Transparent)
+                return;
+
+            using (var paint = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = separatorsWidth,
+                Color = separatorsColor,
+                IsAntialias = true
+            })
+            {
+                var radiusSeparatorsPath = CreateRadiusSeparatorsPath(outerRadius, innerRadius);
+                canvas.DrawPath(radiusSeparatorsPath, paint);
+
+                var sumValues = itemSource.Sum(x => Math.Abs(x.Value));
+                var start = 0.0f;
+
+                for (var index = 0; index < itemSource.Count; ++index)
+                {
+                    var chartItem = itemSource.ElementAt(index);
+                    var end = start + Math.Abs(chartItem.Value) / sumValues;
+
+                    var sectorSeparatorPath = CreateSectorSeparatorPath(start, end, outerRadius, innerRadius);
+
+                    canvas.DrawPath(sectorSeparatorPath, paint);
+
+                    start = end;
+                }
+            }
+        }
+
+        internal static void DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius,
             IReadOnlyList<DonutChartItem> itemSource)
         {
-            var sectorsPaths = new List<SKPath>();
-
             var sumValues = itemSource.Sum(x => Math.Abs(x.Value));
             var start = 0.0f;
 
@@ -54,10 +87,8 @@ namespace ExpenseTracker.Controls.DonutChart
 
                 start = end;
 
-                sectorsPaths.Add(sectorPath);
+                SectorsPaths.Add(sectorPath);
             }
-
-            return sectorsPaths;
         }
 
         internal static void DrawTextInHole(SKCanvas canvas, float innerRadius, float holePrimaryTextScale,
@@ -185,11 +216,59 @@ namespace ExpenseTracker.Controls.DonutChart
             return skPath;
         }
 
+        private static SKPath CreateRadiusSeparatorsPath(float outerRadius, float innerRadius)
+        {
+            var skPath = new SKPath();
+
+            skPath.AddCircle(0.0f, 0.0f, outerRadius);
+            if (innerRadius > 0)
+                skPath.AddCircle(0.0f, 0.0f, innerRadius);
+
+            skPath.Close();
+
+            return skPath;
+        }
+
+        private static SKPath CreateSectorSeparatorPath(float start, float end, float outerRadius, float innerRadius,
+            float margin = 0.0f)
+        {
+            var skPath = new SKPath();
+
+            if (start == end)
+                return skPath;
+
+            if (end - start == 1.0)
+            {
+                skPath.AddCircle(0.0f, 0.0f, outerRadius);
+                skPath.AddCircle(0.0f, 0.0f, innerRadius);
+                skPath.FillType = SKPathFillType.EvenOdd;
+                return skPath;
+            }
+
+            var num1 = (TotalAngle * start - UprightAngle);
+            var num2 = outerRadius == 0.0f
+                ? 0.0f
+                : margin / (TotalAngle * outerRadius) * TotalAngle;
+            var num3 = innerRadius == 0.0f
+                ? 0.0f
+                : margin / (TotalAngle * innerRadius) * TotalAngle;
+
+            var circlePoint1 = GetCirclePoint(outerRadius, num1 + num2);
+            var circlePoint2 = GetCirclePoint(innerRadius, num1 + num3);
+
+            skPath.MoveTo(circlePoint1);
+            skPath.LineTo(circlePoint2);
+
+            skPath.Close();
+
+            return skPath;
+        }
+
         private static SKPath CreateSectorPath(
             float start,
             float end,
             float outerRadius,
-            float innerRadius = 0.0f,
+            float innerRadius,
             float margin = 0.0f)
         {
             var skPath = new SKPath();
