@@ -56,6 +56,22 @@ namespace ExpenseTracker.Controls.DonutChart
 
         #endregion DonutHoleCommand property
 
+        #region EmptyStateColor property
+
+        public static readonly BindableProperty EmptyStateColorProperty = BindableProperty.Create(
+            nameof(EmptyStateColor),
+            typeof(SKColor),
+            typeof(DonutChartView),
+            SKColors.Transparent);
+
+        public SKColor EmptyStateColor
+        {
+            get => (SKColor) GetValue(EmptyStateColorProperty);
+            set => SetValue(EmptyStateColorProperty, value);
+        }
+
+        #endregion EmptyStateColor property
+
         #region HoleRadius property 
 
         //todo [?] 0 <= HoleRadius <= 1
@@ -299,12 +315,18 @@ namespace ExpenseTracker.Controls.DonutChart
                 var outerRadius = (Math.Min(width, height) - 2.0f * innerMargin) / 2.0f;
                 var innerRadius = outerRadius * HoleRadius;
 
-                DrawSectors(canvas, outerRadius, innerRadius);
+                if (ItemSource.Count == 0)
+                    DrawEmptyState(canvas, outerRadius, innerRadius);
+                else
+                    DrawSectors(canvas, outerRadius, innerRadius);
                 DrawHole(canvas, innerRadius);
                 DrawTextInHole(canvas, innerRadius);
                 DrawSeparators(canvas, outerRadius, innerRadius);
             }
         }
+
+        private void DrawEmptyState(SKCanvas canvas, float outerRadius, float innerRadius) =>
+            DonutChartHelper.DrawEmptyState(canvas, outerRadius, innerRadius, EmptyStateColor);
 
         private void DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius) =>
             DonutChartHelper.DrawSectors(canvas, outerRadius, innerRadius, ItemSource);

@@ -28,6 +28,21 @@ namespace ExpenseTracker.Controls.DonutChart
             }
         }
 
+        internal static void DrawEmptyState(SKCanvas canvas, float outerRadius, float innerRadius,
+            SKColor emptyStateColor)
+        {
+            using (var paint = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = emptyStateColor,
+                IsAntialias = true
+            })
+            {
+                var emptyStatePath = CreateEmptyStatePath(outerRadius, innerRadius);
+                canvas.DrawPath(emptyStatePath, paint);
+            }
+        }
+
         internal static void DrawSeparators(SKCanvas canvas, float outerRadius, float innerRadius,
             SKColor separatorsColor, float separatorsWidth, IReadOnlyList<DonutChartItem> itemSource)
         {
@@ -216,6 +231,21 @@ namespace ExpenseTracker.Controls.DonutChart
             return skPath;
         }
 
+        private static SKPath CreateEmptyStatePath(float outerRadius, float innerRadius)
+        {
+            var skPath = new SKPath();
+
+            skPath.AddCircle(0.0f, 0.0f, outerRadius);
+            if (innerRadius > 0)
+                skPath.AddCircle(0.0f, 0.0f, innerRadius);
+
+            skPath.FillType = SKPathFillType.EvenOdd;
+
+            skPath.Close();
+
+            return skPath;
+        }
+
         private static SKPath CreateRadiusSeparatorsPath(float outerRadius, float innerRadius)
         {
             var skPath = new SKPath();
@@ -289,19 +319,17 @@ namespace ExpenseTracker.Controls.DonutChart
             var arcSize = num2 - num1 > Math.PI
                 ? SKPathArcSize.Large
                 : SKPathArcSize.Small;
-            var num3 = (num2 - num1) / 2.0f;
-            var num4 = (outerRadius - innerRadius) / 2.0f;
-            var num5 = outerRadius == 0.0f
+            var num3 = outerRadius == 0.0f
                 ? 0.0f
                 : margin / (TotalAngle * outerRadius) * TotalAngle;
-            var num6 = innerRadius == 0.0f
+            var num4 = innerRadius == 0.0f
                 ? 0.0f
                 : margin / (TotalAngle * innerRadius) * TotalAngle;
 
-            var circlePoint1 = GetCirclePoint(outerRadius, num1 + num5);
-            var circlePoint2 = GetCirclePoint(outerRadius, num2 - num5);
-            var circlePoint3 = GetCirclePoint(innerRadius, num2 - num6);
-            var circlePoint4 = GetCirclePoint(innerRadius, num1 + num6);
+            var circlePoint1 = GetCirclePoint(outerRadius, num1 + num3);
+            var circlePoint2 = GetCirclePoint(outerRadius, num2 - num3);
+            var circlePoint3 = GetCirclePoint(innerRadius, num2 - num4);
+            var circlePoint4 = GetCirclePoint(innerRadius, num1 + num4);
 
             skPath.MoveTo(circlePoint1);
             skPath.ArcTo(outerRadius, outerRadius, 0.0f, arcSize, SKPathDirection.Clockwise, circlePoint2.X,

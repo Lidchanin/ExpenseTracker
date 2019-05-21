@@ -98,102 +98,21 @@ namespace ExpenseTracker.Pages
                     SecondaryText = "400",
                     SectionColor = SKColors.Yellow
                 },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "11",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Red
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "12",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Yellow
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "11",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Red
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "12",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Yellow
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "11",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Red
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "12",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Yellow
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "11",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Red
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "12",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Yellow
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "11",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Red
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "12",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Yellow
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "11",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Red
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "12",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Yellow
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "11",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Red
-                },
-                new DonutChartItem(10)
-                {
-                    PrimaryText = "12",
-                    SecondaryText = "400",
-                    SectionColor = SKColors.Yellow
-                },
             };
 
             DonutChartView.HoleRadius = 0.3f;
             DonutChartView.HoleColor = SKColors.Transparent;
-            DonutChartView.ItemSource = tempChartElements;
+            DonutChartView.ItemSource = new List<DonutChartItem>();
+            //DonutChartView.ItemSource = tempChartElements;
+
+            DonutChartView.EmptyStateColor = SKColors.Brown;
 
             DonutChartView.DonutSectorCommand = new Command(SectorTouchExecute);
             DonutChartView.DonutHoleCommand = new Command(HoleTouchExecute);
             
-            DonutChartView.HolePrimaryText = "0";
+            DonutChartView.HolePrimaryText = "123 BYN";
             DonutChartView.HolePrimaryTextColor = SKColors.DarkBlue;
-            DonutChartView.HoleSecondaryText = "0";
+            DonutChartView.HoleSecondaryText = "324 BYN";
             DonutChartView.HoleSecondaryTextColor = SKColors.DarkRed;
 
             DonutChartView.SeparatorsColor = SKColors.Black;
