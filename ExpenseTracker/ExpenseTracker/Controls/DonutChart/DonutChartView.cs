@@ -2,6 +2,7 @@
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -12,15 +13,16 @@ namespace ExpenseTracker.Controls.DonutChart
         #region Bindable Properties
 
         #region ItemSource property
-
+        
         public static readonly BindableProperty ItemSourceProperty = BindableProperty.Create(
             nameof(ItemSource),
             typeof(IReadOnlyList<DonutChartItem>),
-            typeof(DonutChartView));
+            typeof(DonutChartView),
+            propertyChanged:OnChartChanged);
 
-        public IReadOnlyList<DonutChartItem> ItemSource
+        public ObservableCollection<DonutChartItem> ItemSource
         {
-            get => (IReadOnlyList<DonutChartItem>) GetValue(ItemSourceProperty);
+            get => (ObservableCollection<DonutChartItem>) GetValue(ItemSourceProperty);
             set => SetValue(ItemSourceProperty, value);
         }
 
@@ -62,8 +64,10 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(EmptyStateColor),
             typeof(SKColor),
             typeof(DonutChartView),
-            SKColors.Transparent);
+            SKColors.Transparent,
+            propertyChanged: OnChartChanged);
 
+        [TypeConverter(typeof(SKColorTypeConverter))]
         public SKColor EmptyStateColor
         {
             get => (SKColor) GetValue(EmptyStateColorProperty);
@@ -79,7 +83,8 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HoleRadius),
             typeof(float),
             typeof(DonutChartView),
-            0.5f);
+            0.5f,
+            propertyChanged: OnChartChanged);
 
         public float HoleRadius
         {
@@ -95,7 +100,8 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HolePrimaryText),
             typeof(string),
             typeof(DonutChartView),
-            string.Empty);
+            string.Empty,
+            propertyChanged: OnChartChanged);
 
         public string HolePrimaryText
         {
@@ -111,7 +117,8 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HoleSecondaryText),
             typeof(string),
             typeof(DonutChartView),
-            string.Empty);
+            string.Empty,
+            propertyChanged: OnChartChanged);
 
         public string HoleSecondaryText
         {
@@ -127,7 +134,8 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HolePrimaryTextScale),
             typeof(float),
             typeof(DonutChartView),
-            1f);
+            1f,
+            propertyChanged: OnChartChanged);
 
         public float HolePrimaryTextScale
         {
@@ -143,7 +151,8 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HoleSecondaryTextScale),
             typeof(float),
             typeof(DonutChartView),
-            1f);
+            1f,
+            propertyChanged: OnChartChanged);
 
         public float HoleSecondaryTextScale
         {
@@ -159,8 +168,10 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HoleColor),
             typeof(SKColor),
             typeof(DonutChartView),
-            SKColors.Transparent);
+            SKColors.Transparent,
+            propertyChanged: OnChartChanged);
 
+        [TypeConverter(typeof(SKColorTypeConverter))]
         public SKColor HoleColor
         {
             get => (SKColor) GetValue(HoleColorProperty);
@@ -175,8 +186,10 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HolePrimaryTextColor),
             typeof(SKColor),
             typeof(DonutChartView),
-            SKColors.Black);
+            SKColors.Black,
+            propertyChanged: OnChartChanged);
 
+        [TypeConverter(typeof(SKColorTypeConverter))]
         public SKColor HolePrimaryTextColor
         {
             get => (SKColor) GetValue(HolePrimaryTextColorProperty);
@@ -191,8 +204,10 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(HoleSecondaryTextColor),
             typeof(SKColor),
             typeof(DonutChartView),
-            SKColors.Black);
+            SKColors.Black,
+            propertyChanged: OnChartChanged);
 
+        [TypeConverter(typeof(SKColorTypeConverter))]
         public SKColor HoleSecondaryTextColor
         {
             get => (SKColor) GetValue(HoleSecondaryTextColorProperty);
@@ -207,7 +222,8 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(SeparatorsWidth),
             typeof(float),
             typeof(DonutChartView),
-            2f);
+            2f,
+            propertyChanged: OnChartChanged);
 
         public float SeparatorsWidth
         {
@@ -223,8 +239,10 @@ namespace ExpenseTracker.Controls.DonutChart
             nameof(SeparatorsColor),
             typeof(SKColor),
             typeof(DonutChartView),
-            SKColors.Black);
+            SKColors.Black,
+            propertyChanged: OnChartChanged);
 
+        [TypeConverter(typeof(SKColorTypeConverter))]
         public SKColor SeparatorsColor
         {
             get => (SKColor) GetValue(SeparatorsColorProperty);
@@ -247,12 +265,17 @@ namespace ExpenseTracker.Controls.DonutChart
 
         #region Private methods
 
-        //todo [!!!] ItemSource changed and elements changed
-        private static void OnChartChanged(BindableObject bindable) =>
+        private static void OnChartChanged(BindableObject bindable, object oldValue, object newValue) =>
             ((SKCanvasView) bindable).InvalidateSurface();
 
-        private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e) =>
+        private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e)
+        {
             DrawContent(e.Surface.Canvas, e.Info.Width, e.Info.Height);
+            ItemSource.CollectionChanged += (o, args) =>
+            {
+                ((SKCanvasView)sender).InvalidateSurface();
+            };
+        }
 
         private void DonutChartView_Touch(object sender, SKTouchEventArgs e)
         {
@@ -306,7 +329,7 @@ namespace ExpenseTracker.Controls.DonutChart
         private void DrawContent(SKCanvas canvas, int width, int height)
         {
             //todo [?] Do smth with InnerMargin
-            const float innerMargin = 20f;
+            const float innerMargin = 0f;
 
             using (new SKAutoCanvasRestore(canvas))
             {
