@@ -1,21 +1,197 @@
 ﻿using SkiaSharp;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ExpenseTracker.Controls.DonutChart
 {
-    public static class DonutChartHelper
+    internal static class DonutChartHelper
     {
         private const float UprightAngle = 1.57079637050629f;
         private const float TotalAngle = 6.28318548202515f;
 
-        public static SKPath CreateSectorPath(
+        internal static SKPath DrawHole(SKCanvas canvas, float innerRadius, SKColor holeColor)
+        {
+            var holePath = CreateHolePath(innerRadius);
+
+            using (var paint = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = holeColor,
+                IsAntialias = true
+            })
+            {
+                canvas.DrawPath(holePath, paint);
+            }
+
+            return holePath;
+        }
+
+        internal static List<SKPath> DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius,
+            IReadOnlyList<DonutChartItem> itemSource)
+        {
+            var sectorsPaths = new List<SKPath>();
+
+            var sumValues = itemSource.Sum(x => Math.Abs(x.Value));
+            var start = 0.0f;
+
+            for (var index = 0; index < itemSource.Count; ++index)
+            {
+                var chartItem = itemSource.ElementAt(index);
+                var end = start + Math.Abs(chartItem.Value) / sumValues;
+
+                var sectorPath = CreateSectorPath(start, end, outerRadius, innerRadius);
+
+                using (var paint = new SKPaint
+                {
+                    Style = SKPaintStyle.Fill,
+                    Color = chartItem.SectionColor,
+                    IsAntialias = true
+                })
+                {
+                    canvas.DrawPath(sectorPath, paint);
+                }
+
+                start = end;
+
+                sectorsPaths.Add(sectorPath);
+            }
+
+            return sectorsPaths;
+        }
+
+        internal static void DrawTextInHole(SKCanvas canvas, float innerRadius, float holePrimaryTextScale,
+            float holeSecondaryTextScale, string holePrimaryText, string holeSecondaryText,
+            SKColor holePrimaryTextColor, SKColor holeSecondaryTextColor)
+        {
+            if (innerRadius < 0.0f)
+                return;
+
+            if (string.IsNullOrEmpty(holePrimaryText) &&
+                string.IsNullOrEmpty(holeSecondaryText))
+                return;
+
+            var squareSide = (float) Math.Sqrt(2) * innerRadius;
+
+            if (string.IsNullOrEmpty(holeSecondaryText))
+            {
+                var textPaint = new SKPaint
+                {
+                    Style = SKPaintStyle.Fill,
+                    Color = holePrimaryTextColor,
+                    IsAntialias = true
+                };
+
+                var startTextWidth = textPaint.MeasureText(holePrimaryText);
+                textPaint.TextSize = GetTextSize(holePrimaryTextScale, squareSide, startTextWidth);
+
+                var textHeight = textPaint.FontMetrics.CapHeight;
+                var textWidth = textPaint.MeasureText(holePrimaryText);
+
+                while (textHeight > textWidth &&
+                       textHeight > squareSide)
+                {
+                    ReduceTextSize(ref holePrimaryTextScale, ref textPaint, ref textHeight, ref textWidth, squareSide,
+                        startTextWidth, holePrimaryText);
+                }
+
+                canvas.DrawText(holePrimaryText, -textWidth / 2.0f, textHeight / 2.0f, textPaint);
+
+                textPaint.Dispose();
+            }
+            else
+            {
+                var prTextPaint = new SKPaint
+                {
+                    Style = SKPaintStyle.Fill,
+                    Color = holePrimaryTextColor
+                };
+
+                var startPrTextWidth = prTextPaint.MeasureText(holePrimaryText);
+                prTextPaint.TextSize = GetTextSize(holePrimaryTextScale, squareSide, startPrTextWidth);
+
+                var prTextHeight = prTextPaint.FontMetrics.CapHeight;
+                var prTextWidth = prTextPaint.MeasureText(holePrimaryText);
+
+                var secTextPaint = new SKPaint
+                {
+                    Style = SKPaintStyle.Fill,
+                    Color = holeSecondaryTextColor
+                };
+
+                var startSecTextWidth = secTextPaint.MeasureText(holeSecondaryText);
+                secTextPaint.TextSize = GetTextSize(holeSecondaryTextScale, squareSide, startSecTextWidth);
+
+                var secTextHeight = secTextPaint.FontMetrics.CapHeight;
+                var secTextWidth = secTextPaint.MeasureText(holeSecondaryText);
+
+                var emptySectorHeight = GetEmptySectorHeight(squareSide, prTextHeight, secTextHeight);
+
+                //todo [?] Change algorithm for TextSize where (prTextHeight + secTextHeight > squareSide)
+                while (prTextHeight > squareSide ||
+                       secTextHeight > squareSide ||
+                       prTextHeight + secTextHeight > squareSide ||
+                       emptySectorHeight < 30f)
+                {
+                    if (prTextHeight > secTextHeight)
+                    {
+                        ReduceTextSize(ref holePrimaryTextScale, ref prTextPaint, ref prTextHeight, ref prTextWidth,
+                            squareSide, startPrTextWidth, holePrimaryText);
+                    }
+                    else if (prTextHeight < secTextHeight)
+                    {
+                        ReduceTextSize(ref holeSecondaryTextScale, ref secTextPaint, ref secTextHeight,
+                            ref secTextWidth, squareSide, startSecTextWidth, holeSecondaryText);
+                    }
+                    else
+                    {
+                        ReduceTextSize(ref holePrimaryTextScale, ref prTextPaint, ref prTextHeight, ref prTextWidth,
+                            squareSide, startPrTextWidth, holePrimaryText);
+                        ReduceTextSize(ref holeSecondaryTextScale, ref secTextPaint, ref secTextHeight,
+                            ref secTextWidth, squareSide, startSecTextWidth, holeSecondaryText);
+                    }
+
+                    emptySectorHeight = GetEmptySectorHeight(squareSide, prTextHeight, secTextHeight);
+                }
+
+                var prTemp = -(squareSide / 2.0f - emptySectorHeight - prTextHeight);
+                var secTemp = (squareSide / 2.0f - emptySectorHeight);
+
+                canvas.DrawText(holePrimaryText, -prTextWidth / 2.0f, prTemp, prTextPaint);
+                canvas.DrawText(holeSecondaryText, -secTextWidth / 2.0f, secTemp, secTextPaint);
+
+                prTextPaint.Dispose();
+                secTextPaint.Dispose();
+            }
+        }
+
+        internal static bool HitTest(SKPoint touchLocation, float canvasWidth, float canvasHeight) =>
+            new SKRect(0, 0, canvasWidth, canvasHeight).Contains(touchLocation);
+
+        #region Private methods
+
+        private static SKPath CreateHolePath(float innerRadius)
+        {
+            var skPath = new SKPath();
+
+            if (innerRadius > 0.0f)
+            {
+                skPath.AddCircle(0.0f, 0.0f, innerRadius);
+                skPath.FillType = SKPathFillType.EvenOdd;
+            }
+
+            skPath.Close();
+
+            return skPath;
+        }
+
+        private static SKPath CreateSectorPath(
             float start,
             float end,
             float outerRadius,
             float innerRadius = 0.0f,
             float margin = 0.0f)
         {
-
             var skPath = new SKPath();
 
             if (start == end)
@@ -64,28 +240,32 @@ namespace ExpenseTracker.Controls.DonutChart
             return skPath;
         }
 
-        public static SKPath CreateHolePath(float innerRadius)
-        {
-            var skPath = new SKPath();
-
-            if (innerRadius > 0.0f)
-            {
-                skPath.AddCircle(0.0f, 0.0f, innerRadius);
-                skPath.FillType = SKPathFillType.EvenOdd;
-            }
-
-            skPath.Close();
-
-            return skPath;
-        }
-
-        public static bool HitTest(SKPoint touchLocation, float canvasWidth, float canvasHeight) =>
-            new SKRect(0, 0, canvasWidth, canvasHeight).Contains(touchLocation);
-
-        #region Private methods
-
         private static SKPoint GetCirclePoint(float radius, float angle) =>
             new SKPoint(radius * (float) Math.Cos(angle), radius * (float) Math.Sin(angle));
+
+        private static float GetTextSize(float textScale, float textSquareSide, float textWidth) =>
+            // 12f is default SKPaint.TextSize
+            textScale * textSquareSide * 12f / textWidth;
+
+        private static float GetEmptySectorHeight(float squareSide, float prTextHeight, float secTextHeight) =>
+            (squareSide - prTextHeight - secTextHeight) / 3.0f;
+
+        private static void ReduceTextSize(
+            ref float textScale,
+            ref SKPaint skPaint,
+            // ReSharper disable once RedundantAssignment
+            ref float textHeight,
+            // ReSharper disable once RedundantAssignment
+            ref float textWidth,
+            float squareSide,
+            float startTextWidth,
+            string text)
+        {
+            textScale -= 0.1f;
+            skPaint.TextSize = GetTextSize(textScale, squareSide, startTextWidth);
+            textHeight = skPaint.FontMetrics.CapHeight;
+            textWidth = skPaint.MeasureText(text);
+        }
 
         #endregion Private methods
     }

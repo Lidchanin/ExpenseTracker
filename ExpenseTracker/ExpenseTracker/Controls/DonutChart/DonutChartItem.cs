@@ -16,9 +16,5 @@ namespace ExpenseTracker.Controls.DonutChart
         public string SecondaryText { get; set; }
 
         public SKColor SectionColor { get; set; } = SKColors.Black;
-
-        public SKColor PrimaryTextColor { get; set; } = SKColors.Black;
-
-        public SKColor SecondaryTextColor { get; set; } = SKColors.DarkSlateGray;
     }
 }

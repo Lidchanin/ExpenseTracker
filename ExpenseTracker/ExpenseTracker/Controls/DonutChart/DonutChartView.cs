@@ -2,7 +2,6 @@
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -51,14 +50,14 @@ namespace ExpenseTracker.Controls.DonutChart
 
         public ICommand DonutHoleCommand
         {
-            get => (ICommand)GetValue(DonutHoleCommandProperty);
+            get => (ICommand) GetValue(DonutHoleCommandProperty);
             set => SetValue(DonutHoleCommandProperty, value);
         }
 
         #endregion DonutHoleCommand property
 
         #region HoleRadius property 
-        
+
         //todo [?] 0 <= HoleRadius <= 1
         public static readonly BindableProperty HoleRadiusProperty = BindableProperty.Create(
             nameof(HoleRadius),
@@ -74,26 +73,123 @@ namespace ExpenseTracker.Controls.DonutChart
 
         #endregion HoleRadiusColor property
 
-        #region HoleBackgroundColor property
+        #region HolePrimaryText property
 
-        public static readonly BindableProperty HoleBackgroundColorProperty = BindableProperty.Create(
-            nameof(HoleBackgroundColor),
+        public static readonly BindableProperty HolePrimaryTextProperty = BindableProperty.Create(
+            nameof(HolePrimaryText),
+            typeof(string),
+            typeof(DonutChartView),
+            string.Empty);
+
+        public string HolePrimaryText
+        {
+            get => (string) GetValue(HolePrimaryTextProperty);
+            set => SetValue(HolePrimaryTextProperty, value);
+        }
+
+        #endregion HolePrimaryText property
+
+        #region HoleSecondaryText property
+
+        public static readonly BindableProperty HoleSecondaryTextProperty = BindableProperty.Create(
+            nameof(HoleSecondaryText),
+            typeof(string),
+            typeof(DonutChartView),
+            string.Empty);
+
+        public string HoleSecondaryText
+        {
+            get => (string) GetValue(HoleSecondaryTextProperty);
+            set => SetValue(HoleSecondaryTextProperty, value);
+        }
+
+        #endregion HoleSecondaryText property
+
+        #region HolePrimaryTextScale property 
+
+        public static readonly BindableProperty HolePrimaryTextScaleProperty = BindableProperty.Create(
+            nameof(HolePrimaryTextScale),
+            typeof(float),
+            typeof(DonutChartView),
+            1f);
+
+        public float HolePrimaryTextScale
+        {
+            get => (float) GetValue(HolePrimaryTextScaleProperty);
+            set => SetValue(HolePrimaryTextScaleProperty, value);
+        }
+
+        #endregion HolePrimaryTextScale property
+
+        #region HoleSecondaryTextScale property 
+
+        public static readonly BindableProperty HoleSecondaryTextScaleProperty = BindableProperty.Create(
+            nameof(HoleSecondaryTextScale),
+            typeof(float),
+            typeof(DonutChartView),
+            1f);
+
+        public float HoleSecondaryTextScale
+        {
+            get => (float) GetValue(HoleSecondaryTextScaleProperty);
+            set => SetValue(HoleSecondaryTextScaleProperty, value);
+        }
+
+        #endregion HoleSecondaryTextScale property
+
+        #region HoleColor property
+
+        public static readonly BindableProperty HoleColorProperty = BindableProperty.Create(
+            nameof(HoleColor),
             typeof(SKColor),
             typeof(DonutChartView),
             SKColors.Transparent);
 
-        public SKColor HoleBackgroundColor
+        public SKColor HoleColor
         {
-            get => (SKColor) GetValue(HoleBackgroundColorProperty);
-            set => SetValue(HoleBackgroundColorProperty, value);
+            get => (SKColor) GetValue(HoleColorProperty);
+            set => SetValue(HoleColorProperty, value);
         }
 
-        #endregion HoleBackgroundColor property
+        #endregion HoleColor property
+
+        #region HolePrimaryTextColor property
+
+        public static readonly BindableProperty HolePrimaryTextColorProperty = BindableProperty.Create(
+            nameof(HolePrimaryTextColor),
+            typeof(SKColor),
+            typeof(DonutChartView),
+            SKColors.Black);
+
+        public SKColor HolePrimaryTextColor
+        {
+            get => (SKColor) GetValue(HolePrimaryTextColorProperty);
+            set => SetValue(HolePrimaryTextColorProperty, value);
+        }
+
+        #endregion HolePrimaryTextColor property
+
+        #region HoleSecondaryTextColor property
+
+        public static readonly BindableProperty HoleSecondaryTextColorProperty = BindableProperty.Create(
+            nameof(HoleSecondaryTextColor),
+            typeof(SKColor),
+            typeof(DonutChartView),
+            SKColors.Black);
+
+        public SKColor HoleSecondaryTextColor
+        {
+            get => (SKColor) GetValue(HoleSecondaryTextColorProperty);
+            set => SetValue(HoleSecondaryTextColorProperty, value);
+        }
+
+        #endregion HoleSecondaryTextColor property
 
         #endregion Bindable Properties
 
         private SKPath _holePath;
-        private readonly List<SKPath> _sectorsPaths = new List<SKPath>();
+        private List<SKPath> _sectorsPaths = new List<SKPath>();
+        private readonly List<long> _touchIds = new List<long>();
 
         public DonutChartView()
         {
@@ -103,18 +199,18 @@ namespace ExpenseTracker.Controls.DonutChart
             Touch += DonutChartView_Touch;
         }
 
-        //todo ItemSource changed and elements changed
+        #region Private methods
+
+        //todo [!!!] ItemSource changed and elements changed
         private static void OnChartChanged(BindableObject bindable) =>
             ((SKCanvasView) bindable).InvalidateSurface();
 
         private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e) =>
             DrawContent(e.Surface.Canvas, e.Info.Width, e.Info.Height);
 
-        private readonly List<long> _touchIds = new List<long>();
-
         private void DonutChartView_Touch(object sender, SKTouchEventArgs e)
         {
-            if(sender == null)
+            if (sender == null)
                 return;
 
             e.Handled = true;
@@ -125,29 +221,19 @@ namespace ExpenseTracker.Controls.DonutChart
             {
                 case SKTouchAction.Pressed:
                     if (DonutChartHelper.HitTest(touchLocation, CanvasSize.Width, CanvasSize.Height))
-                    {
                         _touchIds.Add(e.Id);
-                    }
                     break;
                 case SKTouchAction.Released:
-                    if (_touchIds.Contains(e.Id))
-                    {
-                        _touchIds.Remove(e.Id);
-                    }
+                    if (_touchIds.Contains(e.Id)) _touchIds.Remove(e.Id);
                     OnTouched(touchLocation);
                     break;
                 case SKTouchAction.Cancelled:
                 case SKTouchAction.Exited:
-                    if (_touchIds.Contains(e.Id))
-                    {
-                        _touchIds.Remove(e.Id);
-                    }
+                    if (_touchIds.Contains(e.Id)) _touchIds.Remove(e.Id);
                     break;
             }
         }
 
-        #region Private methods
-    
         //todo [?] command parameter
         private void OnTouched(SKPoint touchLocation)
         {
@@ -171,67 +257,33 @@ namespace ExpenseTracker.Controls.DonutChart
             }
         }
 
-        //todo [REMOVE] InnerMargin 
-        private readonly float _innerMargin = 20f;
-
         private void DrawContent(SKCanvas canvas, int width, int height)
         {
+            //todo [?] Do smth with InnerMargin
+            const float innerMargin = 20f;
+
             using (new SKAutoCanvasRestore(canvas))
             {
                 canvas.Translate(width / 2f, height / 2f);
 
-                var outerRadius = (Math.Min(width, height) - 2.0f * _innerMargin) / 2.0f;
+                var outerRadius = (Math.Min(width, height) - 2.0f * innerMargin) / 2.0f;
                 var innerRadius = outerRadius * HoleRadius;
 
                 DrawSectors(canvas, outerRadius, innerRadius);
                 DrawHole(canvas, innerRadius);
+                DrawTextInHole(canvas, innerRadius);
             }
         }
 
-        private void DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius)
-        {
-            var sumValues = ItemSource.Sum(x => Math.Abs(x.Value));
-            var start = 0.0f;
+        private void DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius) =>
+            _sectorsPaths = DonutChartHelper.DrawSectors(canvas, outerRadius, innerRadius, ItemSource);
 
-            for (var index = 0; index < ItemSource.Count; ++index)
-            {
-                var chartItem = ItemSource.ElementAt(index);
-                var end = start + Math.Abs(chartItem.Value) / sumValues;
+        private void DrawHole(SKCanvas canvas, float innerRadius) =>
+            _holePath = DonutChartHelper.DrawHole(canvas, innerRadius, HoleColor);
 
-                var sectorPath = DonutChartHelper.CreateSectorPath(start, end, outerRadius, innerRadius);
-
-                using (var paint = new SKPaint
-                {
-                    Style = SKPaintStyle.Fill,
-                    Color = chartItem.SectionColor,
-                    IsAntialias = true
-                })
-                {
-                    canvas.DrawPath(sectorPath, paint);
-                }
-
-                start = end;
-
-                _sectorsPaths.Add(sectorPath);
-            }
-        }
-
-        private void DrawHole(SKCanvas canvas, float innerRadius)
-        {
-            var holePath = DonutChartHelper.CreateHolePath(innerRadius);
-
-            using (var paint = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.Black,
-                IsAntialias = true
-            })
-            {
-                canvas.DrawPath(holePath, paint);
-            }
-
-            _holePath = holePath;
-        }
+        private void DrawTextInHole(SKCanvas canvas, float innerRadius) =>
+            DonutChartHelper.DrawTextInHole(canvas, innerRadius, HolePrimaryTextScale, HoleSecondaryTextScale,
+                HolePrimaryText, HoleSecondaryText, HolePrimaryTextColor, HoleSecondaryTextColor);
 
         #endregion Private methods
     }
