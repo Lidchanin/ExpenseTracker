@@ -12,21 +12,21 @@ namespace ExpenseTracker.Controls.DonutChart
     {
         #region Bindable Properties
 
-        #region ItemSource property
+        #region ItemsSource property
         
-        public static readonly BindableProperty ItemSourceProperty = BindableProperty.Create(
-            nameof(ItemSource),
+        public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
+            nameof(ItemsSource),
             typeof(IReadOnlyList<DonutChartItem>),
             typeof(DonutChartView),
             propertyChanged:OnChartChanged);
 
-        public ObservableCollection<DonutChartItem> ItemSource
+        public ObservableCollection<DonutChartItem> ItemsSource
         {
-            get => (ObservableCollection<DonutChartItem>) GetValue(ItemSourceProperty);
-            set => SetValue(ItemSourceProperty, value);
+            get => (ObservableCollection<DonutChartItem>) GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
-        #endregion ItemSource property
+        #endregion ItemsSource property
 
         #region DonutSectorCommand property
 
@@ -271,10 +271,13 @@ namespace ExpenseTracker.Controls.DonutChart
         private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e)
         {
             DrawContent(e.Surface.Canvas, e.Info.Width, e.Info.Height);
-            ItemSource.CollectionChanged += (o, args) =>
-            {
-                ((SKCanvasView)sender).InvalidateSurface();
-            };
+
+            if (ItemsSource != null)
+                ItemsSource.CollectionChanged += (o, args) =>
+                {
+                    ((SKCanvasView) sender).InvalidateSurface();
+                    DonutChartHelper.SectorsPaths.Clear();
+                };
         }
 
         private void DonutChartView_Touch(object sender, SKTouchEventArgs e)
@@ -338,7 +341,7 @@ namespace ExpenseTracker.Controls.DonutChart
                 var outerRadius = (Math.Min(width, height) - 2.0f * innerMargin) / 2.0f;
                 var innerRadius = outerRadius * HoleRadius;
 
-                if (ItemSource.Count == 0)
+                if (ItemsSource == null || ItemsSource.Count == 0)
                     DrawEmptyState(canvas, outerRadius, innerRadius);
                 else
                     DrawSectors(canvas, outerRadius, innerRadius);
@@ -352,11 +355,11 @@ namespace ExpenseTracker.Controls.DonutChart
             DonutChartHelper.DrawEmptyState(canvas, outerRadius, innerRadius, EmptyStateColor);
 
         private void DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius) =>
-            DonutChartHelper.DrawSectors(canvas, outerRadius, innerRadius, ItemSource);
+            DonutChartHelper.DrawSectors(canvas, outerRadius, innerRadius, ItemsSource);
 
         private void DrawSeparators(SKCanvas canvas, float outerRadius, float innerRadius) =>
             DonutChartHelper.DrawSeparators(canvas, outerRadius, innerRadius, SeparatorsColor, SeparatorsWidth,
-                ItemSource);
+                ItemsSource);
 
         private void DrawHole(SKCanvas canvas, float innerRadius) =>
             DonutChartHelper.DrawHole(canvas, innerRadius, HoleColor);
