@@ -46,9 +46,7 @@ namespace ExpenseTracker.Controls.DonutChart
         internal static void DrawSeparators(SKCanvas canvas, float outerRadius, float innerRadius,
             SKColor separatorsColor, float separatorsWidth, IReadOnlyList<DonutChartItem> itemSource)
         {
-            if (separatorsWidth <= 0 ||
-                separatorsColor == SKColors.Transparent ||
-                itemSource == null)
+            if (separatorsWidth <= 0 || separatorsColor == SKColors.Transparent)
                 return;
 
             using (var paint = new SKPaint
@@ -61,9 +59,6 @@ namespace ExpenseTracker.Controls.DonutChart
             {
                 var radiusSeparatorsPath = CreateRadiusSeparatorsPath(outerRadius, innerRadius);
                 canvas.DrawPath(radiusSeparatorsPath, paint);
-
-                if (itemSource.Count <= 0)
-                    return;
 
                 var sumValues = itemSource.Sum(x => Math.Abs(x.Value));
                 var start = 0.0f;
@@ -98,7 +93,7 @@ namespace ExpenseTracker.Controls.DonutChart
                 using (var paint = new SKPaint
                 {
                     Style = SKPaintStyle.Fill,
-                    Color = SKColor.Parse(chartItem.SectionHexColor),
+                    Color = chartItem.SectionColor,
                     IsAntialias = true
                 })
                 {
