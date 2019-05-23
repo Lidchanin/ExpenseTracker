@@ -273,7 +273,8 @@ namespace ExpenseTracker.Controls.DonutChart
             DrawContent(e.Surface.Canvas, e.Info.Width, e.Info.Height);
             ItemSource.CollectionChanged += (o, args) =>
             {
-                ((SKCanvasView)sender).InvalidateSurface();
+                ((SKCanvasView) sender).InvalidateSurface();
+                DonutChartHelper.SectorsPaths.Clear();
             };
         }
 

@@ -93,7 +93,7 @@ namespace ExpenseTracker.Controls.DonutChart
                 using (var paint = new SKPaint
                 {
                     Style = SKPaintStyle.Fill,
-                    Color = chartItem.SectionColor,
+                    Color = SKColor.Parse(chartItem.SectionHexColor),
                     IsAntialias = true
                 })
                 {

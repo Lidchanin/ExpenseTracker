@@ -1,12 +1,11 @@
-﻿using SkiaSharp;
-
-namespace ExpenseTracker.Controls.DonutChart
+﻿namespace ExpenseTracker.Controls.DonutChart
 {
     public class DonutChartItem
     {
-        public DonutChartItem(float value)
+        public DonutChartItem(float value, string sectionHexColor)
         {
             Value = value;
+            SectionHexColor = sectionHexColor;
         }
 
         public float Value { get; }
@@ -15,6 +14,6 @@ namespace ExpenseTracker.Controls.DonutChart
 
         public string SecondaryText { get; set; }
 
-        public SKColor SectionColor { get; set; } = SKColors.Black;
+        public string SectionHexColor { get; set; }
     }
 }
