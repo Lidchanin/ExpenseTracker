@@ -8,15 +8,14 @@ namespace ExpenseTracker.Models
 
         public string Name { get; set; }
 
+        public string HexColor { get; set; }
+
         public ICollection<Expense> Expenses { get; set; }
 
         public long CategoryIconId { get; set; }
 
         public CategoryIcon CategoryIcon { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
     }
 }

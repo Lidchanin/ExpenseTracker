@@ -1,18 +1,24 @@
-﻿using ExpenseTracker.Models;
+﻿using ExpenseTracker.Helpers;
+using ExpenseTracker.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using Xamarin.Forms;
 
-namespace ExpenseTracker.Helpers
+namespace ExpenseTracker.Data
 {
-    public class ExpensesDatabaseContext : DbContext
+    public sealed class ExpensesDatabaseContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryIcon> CategoryIcons { get; set; }
         public DbSet<Expense> Expenses { get; set; }
 
         private const string DbName = "ExpensesTracker.db";
+
+        public ExpensesDatabaseContext()
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,9 +66,11 @@ namespace ExpenseTracker.Helpers
                 .HasForeignKey(e => e.CategoryId)
                 .IsRequired();
 
+#if DEBUG
             InitializeDefaultCategories(modelBuilder);
             InitializeDefaultCategoryIcons(modelBuilder);
             InitializeDefaultExpenses(modelBuilder);
+#endif
         }
 
         #region Private methods
@@ -71,12 +79,12 @@ namespace ExpenseTracker.Helpers
         {
             var defaultCategories = new[]
             {
-                new Category {Id = 1, Name = "Transport", CategoryIconId = 1},
-                new Category {Id = 2, Name = "Entertainment", CategoryIconId = 2},
-                new Category {Id = 3, Name = "Food", CategoryIconId = 3},
-                new Category {Id = 4, Name = "House", CategoryIconId = 4},
-                new Category {Id = 5, Name = "Medicine", CategoryIconId = 5},
-                new Category {Id = 6, Name = "Taxi", CategoryIconId = 6},
+                new Category {Id = 1, Name = "Transport", HexColor = "#A9EB3C", CategoryIconId = 1},
+                new Category {Id = 2, Name = "Entertainment", HexColor = "#EB513C", CategoryIconId = 2},
+                new Category {Id = 3, Name = "Food", HexColor = "#3C74EB", CategoryIconId = 3},
+                new Category {Id = 4, Name = "House", HexColor = "#DAF7A6", CategoryIconId = 4},
+                new Category {Id = 5, Name = "Medicine", HexColor = "#DB13BA", CategoryIconId = 5},
+                new Category {Id = 6, Name = "Taxi", HexColor = "#DB1353", CategoryIconId = 6},
             };
 
             modelBuilder.Entity<Category>().HasData(defaultCategories);
@@ -97,7 +105,6 @@ namespace ExpenseTracker.Helpers
             modelBuilder.Entity<CategoryIcon>().HasData(defaultCategoryIcons);
         }
 
-        //todo [TestData]
         private static void InitializeDefaultExpenses(ModelBuilder modelBuilder)
         {
             var defaultExpenses = new[]
