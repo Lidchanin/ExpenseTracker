@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace ExpenseTracker.Data
 {
-    public sealed class ExpensesDatabaseContext : DbContext
+    public sealed class ExpensesDbContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryIcon> CategoryIcons { get; set; }
@@ -15,7 +15,7 @@ namespace ExpenseTracker.Data
 
         private const string DbName = "ExpensesTracker.db";
 
-        public ExpensesDatabaseContext()
+        public ExpensesDbContext()
         {
             Database.EnsureCreated();
         }

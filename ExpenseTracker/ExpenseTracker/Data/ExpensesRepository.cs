@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Data
 {
-    public class ExpensesDatabaseHelper : IExpenseDatabaseHelper
+    public class ExpensesRepository : IExpenseRepository
     {
         #region Instance
 
-        private static ExpensesDatabaseHelper _instance;
+        private static ExpensesRepository _instance;
 
-        public static readonly ExpensesDatabaseHelper
-            Instance = _instance ?? (_instance = new ExpensesDatabaseHelper());
+        public static readonly ExpensesRepository
+            Instance = _instance ?? (_instance = new ExpensesRepository());
 
         #endregion Instance
 
@@ -30,7 +30,7 @@ namespace ExpenseTracker.Data
             //        INNER JOIN CategoryIcons ci ON ci.Id = c.CategoryIconId
             //GROUP BY c.Id
             //ORDER BY TotalCost DESC
-            using (var dbContext = new ExpensesDatabaseContext())
+            using (var dbContext = new ExpensesDbContext())
             {
                 return await ExecuteWithGeneralExceptionHandling(async () => await (
                         from category in dbContext.Categories
@@ -73,7 +73,7 @@ namespace ExpenseTracker.Data
             //WHERE   e.Timestamp >= '2019-03-01 00:00:00' AND e.Timestamp <= '2019-04-01 00:00:00'
             //GROUP BY c.Id
             //ORDER BY TotalCost DESC
-            using (var dbContext = new ExpensesDatabaseContext())
+            using (var dbContext = new ExpensesDbContext())
             {
                 return await ExecuteWithGeneralExceptionHandling(async () => await (
                         from category in dbContext.Categories

@@ -1,13 +1,15 @@
 ﻿using Xamarin.Forms.Xaml;
 
-namespace ExpenseTracker.Pages
+namespace ExpenseTracker
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class StartPage
+    public partial class AppShell
     {
-        public StartPage()
+        public AppShell()
         {
             InitializeComponent();
+
+            BindingContext = this;
         }
     }
 }

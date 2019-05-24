@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://xamarin.com/schemas/2014/forms"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
+       xmlns:pages="clr-namespace:ExpenseTracker.Pages;assembly=ExpenseTracker"
+       FlyoutHeaderBehavior="CollapseOnScroll"
+       Title="Shell Title"
+       x:Class="ExpenseTracker.AppShell">
+
+    <Shell.FlyoutHeader>
+        <Grid HeightRequest="300">
+            <Image Source="{x:Static helpers:ConstantHelper.ImagePlaceholder}"
+                   Aspect="AspectFill"
+                   HeightRequest="500"
+                   HorizontalOptions="FillAndExpand"/>
+            <Label Text="Flyout Header"
+                   TextColor="White"
+                   FontSize="48"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Route="start"
+                Title="Start"
+                FlyoutIcon="{x:Static helpers:ConstantHelper.ImagePlaceholder}">
+        <Tab>
+            <ShellContent>
+                <pages:StartPage/>
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Route="settings"
+                Title="Settings"
+                FlyoutIcon="{x:Static helpers:ConstantHelper.ImagePlaceholder}">
+        <Tab>
+            <ShellContent>
+                <pages:SettingsPage/>
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Route="about"
+                Title="About"
+                FlyoutIcon="{x:Static helpers:ConstantHelper.ImagePlaceholder}">
+        <Tab>
+            <ShellContent>
+                <pages:AboutPage/>
+            </ShellContent>
+        </Tab>
+    </FlyoutItem>
+</Shell>

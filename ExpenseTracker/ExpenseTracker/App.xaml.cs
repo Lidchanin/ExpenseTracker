@@ -1,4 +1,4 @@
-﻿using ExpenseTracker.Pages;
+﻿using Xamarin.Essentials;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -6,11 +6,15 @@ namespace ExpenseTracker
 {
     public partial class App
     {
+        public static double ScreenWidth;
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            ScreenWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
+
+            MainPage = new AppShell();
         }
 
         protected override void OnStart()

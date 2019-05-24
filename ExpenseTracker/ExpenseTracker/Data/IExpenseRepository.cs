@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Data
 {
-    public interface IExpenseDatabaseHelper
+    public interface IExpenseRepository
     {
         Task<List<CategoryWithCostSum>> GetCategoriesWithCostSumAsync();
 

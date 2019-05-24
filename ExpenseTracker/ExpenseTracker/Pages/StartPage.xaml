@@ -1,18 +1,79 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <pages:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:local="clr-namespace:ExpenseTracker;assembly=ExpenseTracker"
                 xmlns:charts="clr-namespace:ExpenseTracker.Controls.DonutChart;assembly=ExpenseTracker"
                 xmlns:pages="clr-namespace:ExpenseTracker.Pages;assembly=ExpenseTracker"
                 xmlns:viewModels="clr-namespace:ExpenseTracker.ViewModels;assembly=ExpenseTracker"
+                xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
                 x:Class="ExpenseTracker.Pages.StartPage">
 
     <pages:BasePage.BindingContext>
-        <viewModels:StartViewModel x:Name="ViewModel"/>
+        <viewModels:StartViewModel x:Name="ViewModel" />
     </pages:BasePage.BindingContext>
 
     <pages:BasePage.Content>
-            <charts:DonutChartView x:Name="DonutChartView"
-                                   HorizontalOptions="FillAndExpand"
-                                   VerticalOptions="FillAndExpand"/>
+            <Grid ColumnSpacing="0"
+                  RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <charts:DonutChartView ItemSource="{Binding ChartItems}"
+                                       HolePrimaryText="{Binding HoleText}"
+                                       HolePrimaryTextColor="#16161D"
+                                       DonutSectorCommand="{Binding SectorTouchCommand}"
+                                       DonutHoleCommand="{Binding HoleTouchCommand}"
+                                       SeparatorsWidth="3"
+                                       SeparatorsColor="#16161D"
+                                       HeightRequest="{x:Static local:App.ScreenWidth}"
+                                       WidthRequest="{x:Static local:App.ScreenWidth}"
+                                       HoleRadius="0.3"
+                                       EmptyStateColor="#FF0000"
+                                       Grid.Row="0" />
+
+                <!--<CollectionView ItemsSource="{Binding CategoriesWithCostSum}"
+                                BackgroundColor="Red"
+                                Grid.Row="1"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid BackgroundColor="{Binding HexColor}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding File}" WidthRequest="25" />
+                                <Label Text="{Binding Name}" Grid.Column="1" />
+                                <Label Text="{Binding TotalSum}" Grid.Column="2" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <Label Text="EMPTY list" />
+                    </CollectionView.EmptyView>
+                </CollectionView>-->
+                <ListView ItemsSource="{Binding CategoriesWithCostSum}"
+                          Grid.Row="1"
+                          HasUnevenRows="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal"
+                                             BackgroundColor="{Binding HexColor}">
+                                    <Image Source="{Binding File}" WidthRequest="30" />
+                                    <Label Text="{Binding Name}" />
+                                    <Label Text="{Binding TotalSum}" />
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
     </pages:BasePage.Content>
 </pages:BasePage>
