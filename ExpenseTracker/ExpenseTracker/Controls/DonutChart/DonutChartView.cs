@@ -13,12 +13,12 @@ namespace ExpenseTracker.Controls.DonutChart
         #region Bindable Properties
 
         #region ItemSource property
-        
+
         public static readonly BindableProperty ItemSourceProperty = BindableProperty.Create(
             nameof(ItemSource),
             typeof(IReadOnlyList<DonutChartItem>),
             typeof(DonutChartView),
-            propertyChanged:OnChartChanged);
+            propertyChanged: OnChartChanged);
 
         public ObservableCollection<DonutChartItem> ItemSource
         {
@@ -92,7 +92,7 @@ namespace ExpenseTracker.Controls.DonutChart
             set => SetValue(HoleRadiusProperty, value);
         }
 
-        #endregion HoleRadiusColor property
+        #endregion HoleRadius property
 
         #region HolePrimaryText property
 
@@ -216,6 +216,57 @@ namespace ExpenseTracker.Controls.DonutChart
 
         #endregion HoleSecondaryTextColor property
 
+        #region InnerMargin property 
+
+        public static readonly BindableProperty InnerMarginProperty = BindableProperty.Create(
+            nameof(InnerMargin),
+            typeof(float),
+            typeof(DonutChartView),
+            100f,
+            propertyChanged: OnChartChanged);
+
+        public float InnerMargin
+        {
+            get => (float) GetValue(InnerMarginProperty);
+            set => SetValue(InnerMarginProperty, value);
+        }
+
+        #endregion InnerMargin property
+
+        #region LineToCircleLength property 
+
+        public static readonly BindableProperty LineToCircleLengthProperty = BindableProperty.Create(
+            nameof(LineToCircleLength),
+            typeof(float),
+            typeof(DonutChartView),
+            20f,
+            propertyChanged: OnChartChanged);
+
+        public float LineToCircleLength
+        {
+            get => (float) GetValue(LineToCircleLengthProperty);
+            set => SetValue(LineToCircleLengthProperty, value);
+        }
+
+        #endregion LineToCircleLength property
+
+        #region DescriptionCircleRadius property 
+
+        public static readonly BindableProperty DescriptionCircleRadiusProperty = BindableProperty.Create(
+            nameof(DescriptionCircleRadius),
+            typeof(float),
+            typeof(DonutChartView),
+            30f,
+            propertyChanged: OnChartChanged);
+
+        public float DescriptionCircleRadius
+        {
+            get => (float) GetValue(DescriptionCircleRadiusProperty);
+            set => SetValue(DescriptionCircleRadiusProperty, value);
+        }
+
+        #endregion DescriptionCircleRadius property
+
         #region SeparatorsWidth property 
 
         public static readonly BindableProperty SeparatorsWidthProperty = BindableProperty.Create(
@@ -271,10 +322,12 @@ namespace ExpenseTracker.Controls.DonutChart
         private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e)
         {
             DrawContent(e.Surface.Canvas, e.Info.Width, e.Info.Height);
+
             ItemSource.CollectionChanged += (o, args) =>
             {
-                ((SKCanvasView) sender).InvalidateSurface();
+                ((SKCanvasView)sender).InvalidateSurface();
                 DonutChartHelper.SectorsPaths.Clear();
+                DonutChartHelper.DescriptionsPaths.Clear();
             };
         }
 
@@ -319,7 +372,8 @@ namespace ExpenseTracker.Controls.DonutChart
 
             for (var i = 0; i < DonutChartHelper.SectorsPaths.Count; i++)
             {
-                if (DonutChartHelper.SectorsPaths[i].Contains(translatedLocation.X, translatedLocation.Y))
+                if (DonutChartHelper.SectorsPaths[i].Contains(translatedLocation.X, translatedLocation.Y) ||
+                    DonutChartHelper.DescriptionsPaths[i].Contains(translatedLocation.X, translatedLocation.Y))
                 {
                     DonutSectorCommand.Execute(i);
                     return;
@@ -329,14 +383,12 @@ namespace ExpenseTracker.Controls.DonutChart
 
         private void DrawContent(SKCanvas canvas, int width, int height)
         {
-            //todo [?] Do smth with InnerMargin
-            const float innerMargin = 0f;
-
+            canvas.Clear();
             using (new SKAutoCanvasRestore(canvas))
             {
                 canvas.Translate(width / 2f, height / 2f);
 
-                var outerRadius = (Math.Min(width, height) - 2.0f * innerMargin) / 2.0f;
+                var outerRadius = (Math.Min(width, height) - 2.0f * InnerMargin) / 2.0f;
                 var innerRadius = outerRadius * HoleRadius;
 
                 if (ItemSource.Count == 0)
@@ -346,6 +398,8 @@ namespace ExpenseTracker.Controls.DonutChart
                 DrawHole(canvas, innerRadius);
                 DrawTextInHole(canvas, innerRadius);
                 DrawSeparators(canvas, outerRadius, innerRadius);
+
+                DrawDescriptions(canvas, outerRadius);
             }
         }
 
@@ -365,6 +419,10 @@ namespace ExpenseTracker.Controls.DonutChart
         private void DrawTextInHole(SKCanvas canvas, float innerRadius) =>
             DonutChartHelper.DrawTextInHole(canvas, innerRadius, HolePrimaryTextScale, HoleSecondaryTextScale,
                 HolePrimaryText, HoleSecondaryText, HolePrimaryTextColor, HoleSecondaryTextColor);
+
+        private void DrawDescriptions(SKCanvas canvas, float outerRadius) =>
+            DonutChartHelper.DrawDescriptions(canvas, outerRadius, SeparatorsColor, SeparatorsWidth, ItemSource,
+                DescriptionCircleRadius, LineToCircleLength);
 
         #endregion Private methods
     }

@@ -8,6 +8,7 @@ namespace ExpenseTracker.Controls.DonutChart
     internal static class DonutChartHelper
     {
         internal static readonly List<SKPath> SectorsPaths = new List<SKPath>();
+        internal static readonly List<SKPath> DescriptionsPaths = new List<SKPath>();
         internal static SKPath HolePath;
 
         private const float UprightAngle = 1.57079637050629f;
@@ -106,6 +107,72 @@ namespace ExpenseTracker.Controls.DonutChart
             }
         }
 
+        internal static void DrawDescriptions(SKCanvas canvas, float outerRadius, SKColor separatorsColor,
+            float separatorsWidth, IReadOnlyList<DonutChartItem> itemSource, float circleRadius,
+            float lineToCircleLength)
+        {
+            var sumValues = itemSource.Sum(x => Math.Abs(x.Value));
+            var resizedBitmapSide = (int) GetInnerRectSideOfCircle(circleRadius);
+            var separatorPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = separatorsWidth,
+                Color = separatorsColor,
+                IsAntialias = true
+            };
+            var descPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                IsAntialias = true
+            };
+
+            var start = 0.0f;
+
+            for (var index = 0; index < itemSource.Count; ++index)
+            {
+                var chartItem = itemSource.ElementAt(index);
+
+                var end = start + Math.Abs(chartItem.Value) / sumValues;
+
+                if (chartItem.Bitmap != null &&
+                    !chartItem.Bitmap.IsEmpty &&
+                    end != start)
+                {
+                    var angle1 = TotalAngle * start - UprightAngle;
+                    var angle2 = TotalAngle * end - UprightAngle;
+                    var angle = (angle1 + angle2) / 2;
+
+                    var circlePoint1 = GetCirclePoint(outerRadius, angle);
+                    var circlePoint2 = GetCirclePoint(outerRadius + lineToCircleLength, angle);
+                    var circlePoint3 = GetCirclePoint(outerRadius + lineToCircleLength + circleRadius, angle);
+
+                    var descriptionSeparatorPath =
+                        CreateDescriptionSeparatorPath(circleRadius, circlePoint1, circlePoint2, circlePoint3);
+
+                    canvas.DrawPath(descriptionSeparatorPath, separatorPaint);
+
+                    descPaint.Color = SKColor.Parse(chartItem.SectionHexColor);
+                    canvas.DrawCircle(circlePoint3.X, circlePoint3.Y, circleRadius - separatorsWidth / 2,
+                        descPaint);
+
+                    var resizedBitmap = chartItem.Bitmap.Resize(
+                        new SKImageInfo(resizedBitmapSide, resizedBitmapSide),
+                        SKFilterQuality.High);
+
+                    canvas.DrawBitmap(resizedBitmap,
+                        circlePoint3.X - resizedBitmap.Width / 2f,
+                        circlePoint3.Y - resizedBitmap.Height / 2f);
+
+                    start = end;
+
+                    DescriptionsPaths.Add(descriptionSeparatorPath);
+                }
+            }
+
+            descPaint.Dispose();
+            separatorPaint.Dispose();
+        }
+
         internal static void DrawTextInHole(SKCanvas canvas, float innerRadius, float holePrimaryTextScale,
             float holeSecondaryTextScale, string holePrimaryText, string holeSecondaryText,
             SKColor holePrimaryTextColor, SKColor holeSecondaryTextColor)
@@ -117,7 +184,7 @@ namespace ExpenseTracker.Controls.DonutChart
                 string.IsNullOrEmpty(holeSecondaryText))
                 return;
 
-            var squareSide = (float) Math.Sqrt(2) * innerRadius;
+            var squareSide = (float) GetInnerRectSideOfCircle(innerRadius);
 
             if (string.IsNullOrEmpty(holeSecondaryText))
             {
@@ -259,8 +326,7 @@ namespace ExpenseTracker.Controls.DonutChart
             return skPath;
         }
 
-        private static SKPath CreateSectorSeparatorPath(float start, float end, float outerRadius, float innerRadius,
-            float margin = 0.0f)
+        private static SKPath CreateSectorSeparatorPath(float start, float end, float outerRadius, float innerRadius)
         {
             var skPath = new SKPath();
 
@@ -275,16 +341,10 @@ namespace ExpenseTracker.Controls.DonutChart
                 return skPath;
             }
 
-            var num1 = (TotalAngle * start - UprightAngle);
-            var num2 = outerRadius == 0.0f
-                ? 0.0f
-                : margin / (TotalAngle * outerRadius) * TotalAngle;
-            var num3 = innerRadius == 0.0f
-                ? 0.0f
-                : margin / (TotalAngle * innerRadius) * TotalAngle;
+            var angle = (TotalAngle * start - UprightAngle);
 
-            var circlePoint1 = GetCirclePoint(outerRadius, num1 + num2);
-            var circlePoint2 = GetCirclePoint(innerRadius, num1 + num3);
+            var circlePoint1 = GetCirclePoint(outerRadius, angle);
+            var circlePoint2 = GetCirclePoint(innerRadius, angle);
 
             skPath.MoveTo(circlePoint1);
             skPath.LineTo(circlePoint2);
@@ -294,12 +354,7 @@ namespace ExpenseTracker.Controls.DonutChart
             return skPath;
         }
 
-        private static SKPath CreateSectorPath(
-            float start,
-            float end,
-            float outerRadius,
-            float innerRadius,
-            float margin = 0.0f)
+        private static SKPath CreateSectorPath(float start, float end, float outerRadius, float innerRadius)
         {
             var skPath = new SKPath();
 
@@ -314,22 +369,16 @@ namespace ExpenseTracker.Controls.DonutChart
                 return skPath;
             }
 
-            var num1 = (TotalAngle * start - UprightAngle);
-            var num2 = TotalAngle * end - UprightAngle;
-            var arcSize = num2 - num1 > Math.PI
+            var angle1 = (TotalAngle * start - UprightAngle);
+            var angle2 = TotalAngle * end - UprightAngle;
+            var arcSize = angle2 - angle1 > Math.PI
                 ? SKPathArcSize.Large
                 : SKPathArcSize.Small;
-            var num3 = outerRadius == 0.0f
-                ? 0.0f
-                : margin / (TotalAngle * outerRadius) * TotalAngle;
-            var num4 = innerRadius == 0.0f
-                ? 0.0f
-                : margin / (TotalAngle * innerRadius) * TotalAngle;
 
-            var circlePoint1 = GetCirclePoint(outerRadius, num1 + num3);
-            var circlePoint2 = GetCirclePoint(outerRadius, num2 - num3);
-            var circlePoint3 = GetCirclePoint(innerRadius, num2 - num4);
-            var circlePoint4 = GetCirclePoint(innerRadius, num1 + num4);
+            var circlePoint1 = GetCirclePoint(outerRadius, angle1);
+            var circlePoint2 = GetCirclePoint(outerRadius, angle2);
+            var circlePoint3 = GetCirclePoint(innerRadius, angle2);
+            var circlePoint4 = GetCirclePoint(innerRadius, angle1);
 
             skPath.MoveTo(circlePoint1);
             skPath.ArcTo(outerRadius, outerRadius, 0.0f, arcSize, SKPathDirection.Clockwise, circlePoint2.X,
@@ -347,8 +396,25 @@ namespace ExpenseTracker.Controls.DonutChart
             return skPath;
         }
 
+        private static SKPath CreateDescriptionSeparatorPath(float circleRadius, SKPoint circlePoint1,
+            SKPoint circlePoint2, SKPoint circlePoint3)
+        {
+            var skPath = new SKPath();
+
+            skPath.MoveTo(circlePoint1);
+            skPath.LineTo(circlePoint2);
+            skPath.AddCircle(circlePoint3.X, circlePoint3.Y, circleRadius);
+
+            skPath.Close();
+
+            return skPath;
+        }
+
         private static SKPoint GetCirclePoint(float radius, float angle) =>
             new SKPoint(radius * (float) Math.Cos(angle), radius * (float) Math.Sin(angle));
+
+        private static double GetInnerRectSideOfCircle(float circleRadius) =>
+            Math.Sqrt(2) * circleRadius;
 
         private static float GetTextSize(float textScale, float textSquareSide, float textWidth) =>
             // 12f is default SKPaint.TextSize
@@ -357,16 +423,8 @@ namespace ExpenseTracker.Controls.DonutChart
         private static float GetEmptySectorHeight(float squareSide, float prTextHeight, float secTextHeight) =>
             (squareSide - prTextHeight - secTextHeight) / 3.0f;
 
-        private static void ReduceTextSize(
-            ref float textScale,
-            ref SKPaint skPaint,
-            // ReSharper disable once RedundantAssignment
-            ref float textHeight,
-            // ReSharper disable once RedundantAssignment
-            ref float textWidth,
-            float squareSide,
-            float startTextWidth,
-            string text)
+        private static void ReduceTextSize(ref float textScale, ref SKPaint skPaint, ref float textHeight,
+            ref float textWidth, float squareSide, float startTextWidth, string text)
         {
             textScale -= 0.1f;
             skPaint.TextSize = GetTextSize(textScale, squareSide, startTextWidth);

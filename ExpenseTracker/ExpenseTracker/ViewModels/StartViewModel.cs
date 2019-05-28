@@ -1,11 +1,11 @@
 ﻿using ExpenseTracker.Controls.DonutChart;
 using ExpenseTracker.Data.DTOs;
+using ExpenseTracker.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 
 namespace ExpenseTracker.ViewModels
 {
@@ -33,12 +33,16 @@ namespace ExpenseTracker.ViewModels
 
         private async void InitData()
         {
-            CategoriesWithCostSum=
-                new ObservableCollection<CategoryWithCostSum>(
-                    await ExpenseRepository.GetCategoriesWithCostSumAsync());
+            CategoriesWithCostSum = new ObservableCollection<CategoryWithCostSum>(
+                await ExpenseRepository.GetCategoriesWithCostSumAsync());
+
+            var skBitmapHelper = DependencyService.Get<ISKBitmapService>();
+
             foreach (var item in CategoriesWithCostSum)
             {
-                ChartItems.Add(new DonutChartItem((float) item.TotalSum, item.HexColor));
+                var bitmap = skBitmapHelper.GetSKBitmap(item.File);
+
+                ChartItems.Add(new DonutChartItem((float) item.TotalSum, item.HexColor, bitmap));
             }
         }
 
@@ -60,7 +64,11 @@ namespace ExpenseTracker.ViewModels
             int num5 = randomGen.Next(0, 10);
             int num6 = randomGen.Next(0, 10);
 
-            ChartItems.Add(new DonutChartItem(randomGen.Next(100, 300), $"#{num1}{num2}{num3}{num4}{num5}{num6}"));
+            var pngHelper = DependencyService.Get<ISKBitmapService>();
+            var bitmap = pngHelper.GetSKBitmap("ic_placeholder.png");
+
+            ChartItems.Add(new DonutChartItem(randomGen.Next(100, 1000), $"#{num1}{num2}{num3}{num4}{num5}{num6}",
+                bitmap));
         }
 
         #endregion Private methods

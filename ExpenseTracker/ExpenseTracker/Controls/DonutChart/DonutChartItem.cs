@@ -1,19 +1,20 @@
-﻿namespace ExpenseTracker.Controls.DonutChart
+﻿using SkiaSharp;
+
+namespace ExpenseTracker.Controls.DonutChart
 {
     public class DonutChartItem
     {
-        public DonutChartItem(float value, string sectionHexColor)
+        public DonutChartItem(float value, string sectionHexColor, SKBitmap bitmap = null)
         {
             Value = value;
             SectionHexColor = sectionHexColor;
+            Bitmap = bitmap;
         }
 
         public float Value { get; }
 
-        public string PrimaryText { get; set; }
+        public string SectionHexColor { get; }
 
-        public string SecondaryText { get; set; }
-
-        public string SectionHexColor { get; set; }
+        public SKBitmap Bitmap { get; }
     }
 }
