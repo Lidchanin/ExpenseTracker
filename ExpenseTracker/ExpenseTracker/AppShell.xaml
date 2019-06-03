@@ -9,7 +9,7 @@
 
     <Shell.FlyoutHeader>
         <Grid HeightRequest="300">
-            <Image Source="{x:Static helpers:ConstantHelper.ImagePlaceholder}"
+            <Image Source="{x:Static helpers:ConstantHelper.PlaceholderIcon}"
                    Aspect="AspectFill"
                    HeightRequest="500"
                    HorizontalOptions="FillAndExpand"/>
@@ -21,19 +21,28 @@
         </Grid>
     </Shell.FlyoutHeader>
 
-    <FlyoutItem Route="start"
-                Title="Start"
-                FlyoutIcon="{x:Static helpers:ConstantHelper.ImagePlaceholder}">
-        <Tab>
+    <FlyoutItem Route="home"
+                Title="Home"
+                FlyoutIcon="{x:Static helpers:ConstantHelper.HomeIcon}">
+        <Tab Route="chart"
+             Title="Chart"
+             Icon="{x:Static helpers:ConstantHelper.DonutChartIcon}">
             <ShellContent>
-                <pages:StartPage/>
+                <pages:HomeChartPage/>
+            </ShellContent>
+        </Tab>
+        <Tab Route="list" 
+             Title="List"
+             Icon="{x:Static helpers:ConstantHelper.ListIcon}">
+            <ShellContent>
+                <pages:HomeListPage/>
             </ShellContent>
         </Tab>
     </FlyoutItem>
 
     <FlyoutItem Route="settings"
                 Title="Settings"
-                FlyoutIcon="{x:Static helpers:ConstantHelper.ImagePlaceholder}">
+                FlyoutIcon="{x:Static helpers:ConstantHelper.SettingsIcon}">
         <Tab>
             <ShellContent>
                 <pages:SettingsPage/>
@@ -43,7 +52,7 @@
 
     <FlyoutItem Route="about"
                 Title="About"
-                FlyoutIcon="{x:Static helpers:ConstantHelper.ImagePlaceholder}">
+                FlyoutIcon="{x:Static helpers:ConstantHelper.AboutIcon}">
         <Tab>
             <ShellContent>
                 <pages:AboutPage/>

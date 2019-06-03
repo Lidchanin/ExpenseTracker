@@ -7,7 +7,7 @@ namespace ExpenseTracker.Models
     {
         public long Id { get; set; }
 
-        public string FilenameOrFilepath { get; set; } = ConstantHelper.ImagePlaceholder;
+        public string FilenameOrFilepath { get; set; } = ConstantHelper.PlaceholderIcon;
 
         public ICollection<Category> Categories { get; set; }
     }

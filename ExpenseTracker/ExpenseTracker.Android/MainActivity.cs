@@ -18,12 +18,14 @@ namespace ExpenseTracker.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            Forms.SetFlags("CollectionView_Experimental");
-
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
+
+            Forms.SetFlags("CollectionView_Experimental");
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
+
             Forms.Init(this, savedInstanceState);
 
             Platform.Init(this, savedInstanceState);
@@ -37,6 +39,18 @@ namespace ExpenseTracker.Droid
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        public override void OnBackPressed()
+        {
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+                // Do something if there are some pages in the `PopupStack`
+            }
+            else
+            {
+                // Do something if there are not any pages in the `PopupStack`
+            }
         }
     }
 }

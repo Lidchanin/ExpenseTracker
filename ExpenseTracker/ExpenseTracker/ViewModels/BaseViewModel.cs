@@ -5,8 +5,8 @@ namespace ExpenseTracker.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
-        protected readonly IExpenseRepository ExpenseRepository = ExpensesRepository.Instance;
-
         public event PropertyChangedEventHandler PropertyChanged;
+
+        protected readonly IExpenseRepository ExpenseRepository = ExpensesRepository.Instance;
     }
 }

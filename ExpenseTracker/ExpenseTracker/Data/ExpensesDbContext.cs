@@ -13,8 +13,6 @@ namespace ExpenseTracker.Data
         public DbSet<CategoryIcon> CategoryIcons { get; set; }
         public DbSet<Expense> Expenses { get; set; }
 
-        private const string DbName = "ExpensesTracker.db";
-
         public ExpensesDbContext()
         {
             Database.EnsureCreated();
@@ -22,16 +20,18 @@ namespace ExpenseTracker.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            const string dbName = "ExpensesTracker.db";
             string dbPath;
+
             switch (Device.RuntimePlatform)
             {
                 case Device.iOS:
                     SQLitePCL.Batteries_V2.Init();
                     dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..",
-                        "Library", DbName);
+                        "Library", dbName);
                     break;
                 case Device.Android:
-                    dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), DbName);
+                    dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), dbName);
                     break;
                 default:
                     throw new NotImplementedException("Platform not supported");

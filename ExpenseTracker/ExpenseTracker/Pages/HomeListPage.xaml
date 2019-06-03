@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
+                xmlns:pages="clr-namespace:ExpenseTracker.Pages;assembly=ExpenseTracker"
+                x:Class="ExpenseTracker.Pages.HomeListPage"
+                Title="{x:Static helpers:ConstantHelper.HomePageTitle}">
+
+    <pages:BasePage.ToolbarItems>
+        <ToolbarItem IconImageSource="{x:Static helpers:ConstantHelper.CalendarIcon}"/>
+    </pages:BasePage.ToolbarItems>
+
+    <pages:BasePage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+
+            <ListView ItemsSource="{Binding CategoriesWithCostSum}"
+                      HasUnevenRows="True"
+                      Grid.Row="1">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal"
+                                         BackgroundColor="{Binding HexColor}">
+                                <Image Source="{Binding File}" 
+                                       WidthRequest="30"/>
+                                <Label Text="{Binding Name}"/>
+                                <Label Text="{Binding TotalSum}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </pages:BasePage.Content>
+</pages:BasePage>

@@ -21,6 +21,7 @@ namespace ExpenseTracker.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Forms.SetFlags("CollectionView_Experimental");
+            Rg.Plugins.Popup.Popup.Init();
 
             Forms.Init();
             LoadApplication(new App());
