@@ -311,8 +311,10 @@ namespace ExpenseTracker.Controls.DonutChart
 
         #region Private methods
 
-        private static void OnChartChanged(BindableObject bindable, object oldValue, object newValue) =>
-            ((SKCanvasView) bindable).InvalidateSurface();
+        private static void OnChartChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            InvalidateSurface((SKCanvasView) bindable);
+        }
 
         private void OnPaintCanvas(object sender, SKPaintSurfaceEventArgs e)
         {
@@ -320,10 +322,15 @@ namespace ExpenseTracker.Controls.DonutChart
 
             ItemSource.CollectionChanged += (o, args) =>
             {
-                ((SKCanvasView) sender).InvalidateSurface();
-                DonutChartHelper.SectorsPaths.Clear();
-                DonutChartHelper.DescriptionsPaths.Clear();
+                InvalidateSurface((SKCanvasView) sender);
             };
+        }
+
+        private static void InvalidateSurface(SKCanvasView skCanvasView)
+        {
+            skCanvasView.InvalidateSurface();
+            DonutChartHelper.SectorsPaths.Clear();
+            DonutChartHelper.DescriptionsPaths.Clear();
         }
 
         private void DonutChartView_Touch(object sender, SKTouchEventArgs e)
