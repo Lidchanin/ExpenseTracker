@@ -4,6 +4,5 @@ namespace ExpenseTracker.Controls
 {
     public class IdenticalTextButton : Button
     {
-        
     }
 }

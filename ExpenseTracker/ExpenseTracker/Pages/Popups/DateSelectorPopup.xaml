@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<popups:BasePopup xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:controls="clr-namespace:ExpenseTracker.Controls;assembly=ExpenseTracker"
+                  xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
+                  xmlns:popups="clr-namespace:ExpenseTracker.Pages.Popups;assembly=ExpenseTracker"
+                  xmlns:viewModels="clr-namespace:ExpenseTracker.ViewModels;assembly=ExpenseTracker"
+                  xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                  xmlns:popupPages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                  xmlns:system="clr-namespace:System;assembly=netstandard"
+                  x:Class="ExpenseTracker.Pages.Popups.DateSelectorPopup"
+                  x:TypeArguments="system:Tuple(system:DateTime,system:DateTime)">
+
+    <!--#region Resources-->
+    <popups:BasePopup.Resources>
+        <ResourceDictionary>
+            <!--#region Styles-->
+            <Style TargetType="controls:MaterialDatePicker">
+                <Setter Property="AccentColor"
+                        Value="Blue" />
+                <Setter Property="DefaultColor"
+                        Value="Black" />
+                <Setter Property="InvalidColor"
+                        Value="Red" />
+            </Style>
+            <!--#endregion Styles-->
+        </ResourceDictionary>
+    </popups:BasePopup.Resources>
+    <!--#endregion Resources-->
+
+    <!--#region Popup animation-->
+    <popupPages:PopupPage.Animation>
+        <animations:MoveAnimation
+            PositionIn="Bottom"
+            PositionOut="Bottom"
+            DurationIn="300"
+            DurationOut="300"
+            HasBackgroundAnimation="True" />
+    </popupPages:PopupPage.Animation>
+    <!--#endregion Popup animation-->
+
+    <!--#region Binding context-->
+    <popups:BasePopup.BindingContext>
+        <viewModels:DateSelectorViewModel x:Name="ViewModel" />
+    </popups:BasePopup.BindingContext>
+    <!--#endregion Binding context-->
+
+    <popups:BasePopup.Content>
+        <Grid BackgroundColor="White"
+              VerticalOptions="End"
+              RowSpacing="20"
+              Padding="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Text="{x:Static helpers:ConstantHelper.SelectDates}" />
+
+            <controls:MaterialDatePicker x:Name="FromDatePicker"
+                                         Date="{Binding StartDate}"
+                                         Placeholder="{x:Static helpers:ConstantHelper.From}"
+                                         IsValid="{Binding IsDatesValid}"
+                                         Grid.Row="1"
+                                         Grid.Column="0"
+                                         Grid.ColumnSpan="3" />
+
+            <controls:MaterialDatePicker x:Name="ToDatePicker"
+                                         Date="{Binding EndDate}"
+                                         Placeholder="{x:Static helpers:ConstantHelper.To}"
+                                         IsValid="{Binding IsDatesValid}"
+                                         Grid.Row="2"
+                                         Grid.Column="0"
+                                         Grid.ColumnSpan="3" />
+
+            <Button Text="{x:Static helpers:ConstantHelper.Cancel}"
+                    Clicked="CancelButton_OnClicked"
+                    TextColor="Black"
+                    BackgroundColor="White"
+                    Margin="0,0,20,0"
+                    Grid.Row="3"
+                    Grid.Column="1" />
+
+            <Button Text="{x:Static helpers:ConstantHelper.Ok}"
+                    Clicked="OkButton_OnClicked"
+                    TextColor="White"
+                    BackgroundColor="Blue"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    IsEnabled="False">
+                <Button.Triggers>
+                    <MultiTrigger TargetType="Button">
+                        <MultiTrigger.Conditions>
+                            <BindingCondition Binding="{Binding Source={x:Reference FromDatePicker}, Path=IsValid}"
+                                              Value="True" />
+                            <BindingCondition Binding="{Binding Source={x:Reference ToDatePicker}, Path=IsValid}"
+                                              Value="True" />
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="IsEnabled"
+                                    Value="True" />
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+    </popups:BasePopup.Content>
+</popups:BasePopup>

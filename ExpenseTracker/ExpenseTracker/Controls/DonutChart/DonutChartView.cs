@@ -28,49 +28,48 @@ namespace ExpenseTracker.Controls.DonutChart
 
         #endregion ItemSource property
 
-        #region DonutSectorCommand property
+        #region SectorCommand property
 
-        public static readonly BindableProperty DonutSectorCommandProperty = BindableProperty.Create(
-            nameof(DonutSectorCommand),
+        public static readonly BindableProperty SectorCommandProperty = BindableProperty.Create(
+            nameof(SectorCommand),
             typeof(ICommand),
             typeof(DonutChartView));
 
-        public ICommand DonutSectorCommand
+        public ICommand SectorCommand
         {
-            get => (ICommand) GetValue(DonutSectorCommandProperty);
-            set => SetValue(DonutSectorCommandProperty, value);
+            get => (ICommand) GetValue(SectorCommandProperty);
+            set => SetValue(SectorCommandProperty, value);
         }
 
-        #endregion DonutHoleCommand property
+        #endregion SectorCommand property
 
-        #region DonutSectorCommand property
+        #region HoleCommand property
 
-        public static readonly BindableProperty DonutHoleCommandProperty = BindableProperty.Create(
-            nameof(DonutHoleCommand),
+        public static readonly BindableProperty HoleCommandProperty = BindableProperty.Create(
+            nameof(HoleCommand),
             typeof(ICommand),
             typeof(DonutChartView));
 
-        public ICommand DonutHoleCommand
+        public ICommand HoleCommand
         {
-            get => (ICommand) GetValue(DonutHoleCommandProperty);
-            set => SetValue(DonutHoleCommandProperty, value);
+            get => (ICommand) GetValue(HoleCommandProperty);
+            set => SetValue(HoleCommandProperty, value);
         }
 
-        #endregion DonutHoleCommand property
+        #endregion HoleCommand property
 
         #region EmptyStateColor property
 
         public static readonly BindableProperty EmptyStateColorProperty = BindableProperty.Create(
             nameof(EmptyStateColor),
-            typeof(SKColor),
+            typeof(Color),
             typeof(DonutChartView),
-            SKColors.Transparent,
+            Color.Transparent,
             propertyChanged: OnChartChanged);
 
-        [TypeConverter(typeof(SKColorTypeConverter))]
-        public SKColor EmptyStateColor
+        public Color EmptyStateColor
         {
-            get => (SKColor) GetValue(EmptyStateColorProperty);
+            get => (Color) GetValue(EmptyStateColorProperty);
             set => SetValue(EmptyStateColorProperty, value);
         }
 
@@ -166,15 +165,14 @@ namespace ExpenseTracker.Controls.DonutChart
 
         public static readonly BindableProperty HoleColorProperty = BindableProperty.Create(
             nameof(HoleColor),
-            typeof(SKColor),
+            typeof(Color),
             typeof(DonutChartView),
-            SKColors.Transparent,
+            Color.Transparent,
             propertyChanged: OnChartChanged);
 
-        [TypeConverter(typeof(SKColorTypeConverter))]
-        public SKColor HoleColor
+        public Color HoleColor
         {
-            get => (SKColor) GetValue(HoleColorProperty);
+            get => (Color) GetValue(HoleColorProperty);
             set => SetValue(HoleColorProperty, value);
         }
 
@@ -184,15 +182,14 @@ namespace ExpenseTracker.Controls.DonutChart
 
         public static readonly BindableProperty HolePrimaryTextColorProperty = BindableProperty.Create(
             nameof(HolePrimaryTextColor),
-            typeof(SKColor),
+            typeof(Color),
             typeof(DonutChartView),
-            SKColors.Black,
+            Color.Black,
             propertyChanged: OnChartChanged);
 
-        [TypeConverter(typeof(SKColorTypeConverter))]
-        public SKColor HolePrimaryTextColor
+        public Color HolePrimaryTextColor
         {
-            get => (SKColor) GetValue(HolePrimaryTextColorProperty);
+            get => (Color) GetValue(HolePrimaryTextColorProperty);
             set => SetValue(HolePrimaryTextColorProperty, value);
         }
 
@@ -202,15 +199,14 @@ namespace ExpenseTracker.Controls.DonutChart
 
         public static readonly BindableProperty HoleSecondaryTextColorProperty = BindableProperty.Create(
             nameof(HoleSecondaryTextColor),
-            typeof(SKColor),
+            typeof(Color),
             typeof(DonutChartView),
-            SKColors.Black,
+            Color.Black,
             propertyChanged: OnChartChanged);
 
-        [TypeConverter(typeof(SKColorTypeConverter))]
-        public SKColor HoleSecondaryTextColor
+        public Color HoleSecondaryTextColor
         {
-            get => (SKColor) GetValue(HoleSecondaryTextColorProperty);
+            get => (Color) GetValue(HoleSecondaryTextColorProperty);
             set => SetValue(HoleSecondaryTextColorProperty, value);
         }
 
@@ -288,15 +284,14 @@ namespace ExpenseTracker.Controls.DonutChart
 
         public static readonly BindableProperty SeparatorsColorProperty = BindableProperty.Create(
             nameof(SeparatorsColor),
-            typeof(SKColor),
+            typeof(Color),
             typeof(DonutChartView),
-            SKColors.Black,
+            Color.Black,
             propertyChanged: OnChartChanged);
 
-        [TypeConverter(typeof(SKColorTypeConverter))]
-        public SKColor SeparatorsColor
+        public Color SeparatorsColor
         {
-            get => (SKColor) GetValue(SeparatorsColorProperty);
+            get => (Color) GetValue(SeparatorsColorProperty);
             set => SetValue(SeparatorsColorProperty, value);
         }
 
@@ -325,7 +320,7 @@ namespace ExpenseTracker.Controls.DonutChart
 
             ItemSource.CollectionChanged += (o, args) =>
             {
-                ((SKCanvasView)sender).InvalidateSurface();
+                ((SKCanvasView) sender).InvalidateSurface();
                 DonutChartHelper.SectorsPaths.Clear();
                 DonutChartHelper.DescriptionsPaths.Clear();
             };
@@ -366,7 +361,7 @@ namespace ExpenseTracker.Controls.DonutChart
 
             if (DonutChartHelper.HolePath.Contains(translatedLocation.X, translatedLocation.Y))
             {
-                DonutHoleCommand.Execute(null);
+                HoleCommand.Execute(null);
                 return;
             }
 
@@ -375,7 +370,7 @@ namespace ExpenseTracker.Controls.DonutChart
                 if (DonutChartHelper.SectorsPaths[i].Contains(translatedLocation.X, translatedLocation.Y) ||
                     DonutChartHelper.DescriptionsPaths[i].Contains(translatedLocation.X, translatedLocation.Y))
                 {
-                    DonutSectorCommand.Execute(i);
+                    SectorCommand.Execute(i);
                     return;
                 }
             }
@@ -404,25 +399,26 @@ namespace ExpenseTracker.Controls.DonutChart
         }
 
         private void DrawEmptyState(SKCanvas canvas, float outerRadius, float innerRadius) =>
-            DonutChartHelper.DrawEmptyState(canvas, outerRadius, innerRadius, EmptyStateColor);
+            DonutChartHelper.DrawEmptyState(canvas, outerRadius, innerRadius, EmptyStateColor.ToSKColor());
 
         private void DrawSectors(SKCanvas canvas, float outerRadius, float innerRadius) =>
             DonutChartHelper.DrawSectors(canvas, outerRadius, innerRadius, ItemSource);
 
         private void DrawSeparators(SKCanvas canvas, float outerRadius, float innerRadius) =>
-            DonutChartHelper.DrawSeparators(canvas, outerRadius, innerRadius, SeparatorsColor, SeparatorsWidth,
-                ItemSource);
+            DonutChartHelper.DrawSeparators(canvas, outerRadius, innerRadius, SeparatorsColor.ToSKColor(),
+                SeparatorsWidth, ItemSource);
 
         private void DrawHole(SKCanvas canvas, float innerRadius) =>
-            DonutChartHelper.DrawHole(canvas, innerRadius, HoleColor);
+            DonutChartHelper.DrawHole(canvas, innerRadius, HoleColor.ToSKColor());
 
         private void DrawTextInHole(SKCanvas canvas, float innerRadius) =>
             DonutChartHelper.DrawTextInHole(canvas, innerRadius, HolePrimaryTextScale, HoleSecondaryTextScale,
-                HolePrimaryText, HoleSecondaryText, HolePrimaryTextColor, HoleSecondaryTextColor);
+                HolePrimaryText, HoleSecondaryText, HolePrimaryTextColor.ToSKColor(),
+                HoleSecondaryTextColor.ToSKColor());
 
         private void DrawDescriptions(SKCanvas canvas, float outerRadius) =>
-            DonutChartHelper.DrawDescriptions(canvas, outerRadius, SeparatorsColor, SeparatorsWidth, ItemSource,
-                DescriptionCircleRadius, LineToCircleLength);
+            DonutChartHelper.DrawDescriptions(canvas, outerRadius, SeparatorsColor.ToSKColor(), SeparatorsWidth,
+                ItemSource, DescriptionCircleRadius, LineToCircleLength);
 
         #endregion Private methods
     }

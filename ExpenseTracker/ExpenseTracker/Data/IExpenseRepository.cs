@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Data.DTOs;
+using ExpenseTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,8 +8,10 @@ namespace ExpenseTracker.Data
 {
     public interface IExpenseRepository
     {
-        Task<List<CategoryWithCostSum>> GetCategoriesWithCostSumAsync();
+        Task<List<CategoryWithCostSum>> GetCategoriesWithCostSumAsync(DateTime fromDate, DateTime toDate);
 
-        Task<List<CategoryWithCostSum>> GetCategoriesWithCostSumAsync(DateTime startDate, DateTime endDate);
+        Task<List<Category>> GetCategoriesAsync();
+
+        Task<Expense> AddExpenseAsync(Expense expense);
     }
 }

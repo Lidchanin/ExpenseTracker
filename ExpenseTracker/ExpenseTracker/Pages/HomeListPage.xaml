@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <pages:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                 xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
@@ -6,34 +7,81 @@
                 x:Class="ExpenseTracker.Pages.HomeListPage"
                 Title="{x:Static helpers:ConstantHelper.HomePageTitle}">
 
+    <!--#region Toolbar items-->
     <pages:BasePage.ToolbarItems>
-        <ToolbarItem IconImageSource="{x:Static helpers:ConstantHelper.CalendarIcon}"/>
+        <ToolbarItem IconImageSource="{x:Static helpers:ConstantHelper.CalendarIcon}"
+                     Command="{Binding CalendarItemCommand}" />
     </pages:BasePage.ToolbarItems>
+    <!--#endregion Toolbar items-->
 
     <pages:BasePage.Content>
-        <Grid>
+        <Grid Style="{StaticResource SecondaryGridStyle}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="6*"/>
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <ListView ItemsSource="{Binding CategoriesWithCostSum}"
+                      SeparatorVisibility="None"
                       HasUnevenRows="True"
-                      Grid.Row="1">
+                      Grid.Row="0"
+                      Margin="0,5">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal"
-                                         BackgroundColor="{Binding HexColor}">
-                                <Image Source="{Binding File}" 
-                                       WidthRequest="30"/>
-                                <Label Text="{Binding Name}"/>
-                                <Label Text="{Binding TotalSum}"/>
-                            </StackLayout>
+                            <Frame Padding="5"
+                                   Margin="10,5"
+                                   Style="{StaticResource PrimaryFrameStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="2*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Frame BackgroundColor="{Binding HexColor}"
+                                           HasShadow="False"
+                                           Padding="3"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Center"
+                                           Grid.Row="0"
+                                           Grid.RowSpan="2">
+                                        <Image Source="{Binding File}"
+                                               WidthRequest="50"
+                                               HeightRequest="50" />
+                                    </Frame>
+
+                                    <Label Text="{Binding Name}"
+                                           TextColor="Black"
+                                           FontSize="Medium"
+                                           VerticalTextAlignment="Center"
+                                           Grid.Row="0"
+                                           Grid.Column="1" />
+
+                                    <Label Text="{Binding TotalSum, StringFormat={x:Static helpers:ConstantHelper.TotalSumStringFormat}}"
+                                           FontSize="Small"
+                                           VerticalTextAlignment="Center"
+                                           Grid.Row="1"
+                                           Grid.Column="1" />
+                                </Grid>
+                            </Frame>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <Button Text="+"
+                    BackgroundColor="{DynamicResource SecondaryColor}"
+                    TextColor="White"
+                    FontSize="Large"
+                    HeightRequest="50"
+                    WidthRequest="50"
+                    CornerRadius="25"
+                    VerticalOptions="End"
+                    HorizontalOptions="End"
+                    Margin="0,0,20,20" />
         </Grid>
     </pages:BasePage.Content>
 </pages:BasePage>

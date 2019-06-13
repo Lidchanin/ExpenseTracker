@@ -1,61 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
        xmlns:pages="clr-namespace:ExpenseTracker.Pages;assembly=ExpenseTracker"
-       FlyoutHeaderBehavior="CollapseOnScroll"
-       Title="Shell Title"
-       x:Class="ExpenseTracker.AppShell">
+       x:Class="ExpenseTracker.AppShell"
+       Title="{x:Static helpers:ConstantHelper.ShellTitle}"
+       Style="{StaticResource ShellDefaultStyle}">
 
     <Shell.FlyoutHeader>
         <Grid HeightRequest="300">
             <Image Source="{x:Static helpers:ConstantHelper.PlaceholderIcon}"
                    Aspect="AspectFill"
-                   HeightRequest="500"
-                   HorizontalOptions="FillAndExpand"/>
-            <Label Text="Flyout Header"
-                   TextColor="White"
+                   HeightRequest="300"
+                   HorizontalOptions="FillAndExpand" />
+            <Label Text="{x:Static helpers:ConstantHelper.ShellFlyoutHeaderTitle}"
+                   TextColor="{DynamicResource TextOnPrimaryColor}"
                    FontSize="48"
                    HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+                   VerticalOptions="Center" />
         </Grid>
     </Shell.FlyoutHeader>
 
-    <FlyoutItem Route="home"
-                Title="Home"
+    <FlyoutItem Route="{x:Static helpers:RoutingHelper.Home}"
+                Title="{x:Static helpers:ConstantHelper.ShellItemHomeTitle}"
                 FlyoutIcon="{x:Static helpers:ConstantHelper.HomeIcon}">
-        <Tab Route="chart"
-             Title="Chart"
+        <Tab Route="{x:Static helpers:RoutingHelper.Chart}"
+             Title="{x:Static helpers:ConstantHelper.ShellItemHomeChartTitle}"
              Icon="{x:Static helpers:ConstantHelper.DonutChartIcon}">
             <ShellContent>
-                <pages:HomeChartPage/>
+                <pages:HomeChartPage />
             </ShellContent>
         </Tab>
-        <Tab Route="list" 
-             Title="List"
+        <Tab Route="{x:Static helpers:RoutingHelper.List}"
+             Title="{x:Static helpers:ConstantHelper.ShellItemHomeListTitle}"
              Icon="{x:Static helpers:ConstantHelper.ListIcon}">
             <ShellContent>
-                <pages:HomeListPage/>
+                <pages:HomeListPage />
             </ShellContent>
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Route="settings"
-                Title="Settings"
+    <FlyoutItem Route="{x:Static helpers:RoutingHelper.Settings}"
+                Title="{x:Static helpers:ConstantHelper.ShellItemSettingsTitle}"
                 FlyoutIcon="{x:Static helpers:ConstantHelper.SettingsIcon}">
         <Tab>
             <ShellContent>
-                <pages:SettingsPage/>
+                <pages:SettingsPage />
             </ShellContent>
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Route="about"
-                Title="About"
+    <FlyoutItem Route="{x:Static helpers:RoutingHelper.About}"
+                Title="{x:Static helpers:ConstantHelper.ShellItemAboutTitle}"
                 FlyoutIcon="{x:Static helpers:ConstantHelper.AboutIcon}">
         <Tab>
             <ShellContent>
-                <pages:AboutPage/>
+                <pages:AboutPage />
             </ShellContent>
         </Tab>
     </FlyoutItem>

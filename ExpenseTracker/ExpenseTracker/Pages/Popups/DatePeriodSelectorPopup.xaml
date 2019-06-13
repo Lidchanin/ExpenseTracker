@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<popups:BasePopup xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:controls="clr-namespace:ExpenseTracker.Controls;assembly=ExpenseTracker"
+                  xmlns:enums="clr-namespace:ExpenseTracker.Enums;assembly=ExpenseTracker"
+                  xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
+                  xmlns:popups="clr-namespace:ExpenseTracker.Pages.Popups;assembly=ExpenseTracker"
+                  xmlns:viewModels="clr-namespace:ExpenseTracker.ViewModels;assembly=ExpenseTracker"
+                  xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                  xmlns:popupPages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                  x:Class="ExpenseTracker.Pages.Popups.DatePeriodSelectorPopup"
+                  x:TypeArguments="enums:DatePeriod">
+
+    <!--#region Resources-->
+
+    <popups:BasePopup.Resources>
+        <ResourceDictionary>
+            <Style TargetType="controls:IdenticalTextButton">
+                <Setter Property="BackgroundColor"
+                        Value="{DynamicResource PrimaryBaseBackgroundColor}" />
+                <Setter Property="Font"
+                        Value="Medium" />
+                <Setter Property="FontAttributes"
+                        Value="None" />
+                <Setter Property="TextColor"
+                        Value="{DynamicResource TextOnPrimaryBaseBackgroundColor}" />
+            </Style>
+
+            <Style x:Key="DialogTitleLabelStyle"
+                   TargetType="Label">
+                <Setter Property="VerticalTextAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalTextAlignment"
+                        Value="Start" />
+                <Setter Property="FontSize"
+                        Value="Medium" />
+                <Setter Property="FontAttributes"
+                        Value="None" />
+                <Setter Property="TextColor"
+                        Value="{DynamicResource TextOnPrimaryBaseBackgroundColor}" />
+            </Style>
+        </ResourceDictionary>
+    </popups:BasePopup.Resources>
+
+    <!--#endregion Resources-->
+
+    <!--#region Popup animation-->
+
+    <popupPages:PopupPage.Animation>
+        <animations:MoveAnimation
+            PositionIn="Bottom"
+            PositionOut="Bottom"
+            DurationIn="300"
+            DurationOut="300"
+            HasBackgroundAnimation="True" />
+    </popupPages:PopupPage.Animation>
+
+    <!--#endregion Popup animation-->
+
+    <!--#region Binding context-->
+
+    <popups:BasePopup.BindingContext>
+        <viewModels:DatePeriodSelectorViewModel x:Name="ViewModel" />
+    </popups:BasePopup.BindingContext>
+
+    <!--#endregion Binding context-->
+
+    <popups:BasePopup.Content>
+        <Grid BackgroundColor="{DynamicResource PrimaryBaseBackgroundColor}"
+              VerticalOptions="End">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Text="{x:Static helpers:ConstantHelper.SelectPeriod}"
+                   Style="{StaticResource DialogTitleLabelStyle}"
+                   Margin="0,20" />
+
+            <controls:IdenticalTextButton
+                Text="{Binding DatePeriods[0], Converter={StaticResource EnumDescriptionConverter}}"
+                CommandParameter="{Binding DatePeriods[0]}"
+                Clicked="PeriodButtons_OnClicked"
+                Grid.Row="1" />
+
+            <controls:IdenticalTextButton
+                Text="{Binding DatePeriods[1], Converter={StaticResource EnumDescriptionConverter}}"
+                CommandParameter="{Binding DatePeriods[1]}"
+                Clicked="PeriodButtons_OnClicked"
+                Grid.Row="2" />
+
+            <controls:IdenticalTextButton
+                Text="{Binding DatePeriods[2], Converter={StaticResource EnumDescriptionConverter}}"
+                CommandParameter="{Binding DatePeriods[2]}"
+                Clicked="PeriodButtons_OnClicked"
+                Grid.Row="3" />
+
+            <controls:IdenticalTextButton
+                Text="{Binding DatePeriods[3], Converter={StaticResource EnumDescriptionConverter}}"
+                CommandParameter="{Binding DatePeriods[3]}"
+                Clicked="PeriodButtons_OnClicked"
+                Grid.Row="4" />
+
+            <controls:IdenticalTextButton
+                Text="{Binding DatePeriods[4], Converter={StaticResource EnumDescriptionConverter}}"
+                CommandParameter="{Binding DatePeriods[4]}"
+                Clicked="PeriodButtons_OnClicked"
+                Grid.Row="5" />
+
+            <controls:IdenticalTextButton
+                Text="{Binding DatePeriods[5], Converter={StaticResource EnumDescriptionConverter}}"
+                CommandParameter="{Binding DatePeriods[5]}"
+                Clicked="PeriodButtons_OnClicked"
+                Grid.Row="6" />
+        </Grid>
+    </popups:BasePopup.Content>
+</popups:BasePopup>

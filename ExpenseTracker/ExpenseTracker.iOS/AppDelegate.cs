@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using Rg.Plugins.Popup;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -21,9 +22,12 @@ namespace ExpenseTracker.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Forms.SetFlags("CollectionView_Experimental");
-            Rg.Plugins.Popup.Popup.Init();
+            Popup.Init();
 
             Forms.Init();
+
+            FormsMaterial.Init();
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

@@ -1,4 +1,5 @@
-﻿using Xamarin.Essentials;
+﻿using ExpenseTracker.Services;
+using Xamarin.Essentials;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -13,6 +14,8 @@ namespace ExpenseTracker
             InitializeComponent();
 
             ScreenWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
+
+            ThemeManager.LoadTheme();
 
             MainPage = new AppShell();
         }

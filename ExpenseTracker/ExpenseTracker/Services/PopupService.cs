@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
-using ExpenseTracker.Enums;
+﻿using ExpenseTracker.Enums;
+using ExpenseTracker.Models;
 using ExpenseTracker.Pages.Popups;
 using Rg.Plugins.Popup.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace ExpenseTracker.Services
 {
@@ -15,13 +17,39 @@ namespace ExpenseTracker.Services
 
         #endregion Instance
 
-        public async Task<DatePeriods> ShowDatePeriodPopupAsync()
+        public static async Task<DatePeriod> ShowDatePeriodSelectorPopupAsync(DatePeriod datePeriod)
         {
-            var popup = new DatePeriodPopup();
-            await PopupNavigation.Instance.PushAsync(popup);
-            var result = await popup.PageClosedTask;
-            await PopupNavigation.Instance.PopAsync();
-            return result;
+            return await ShowPopup(new DatePeriodSelectorPopup(datePeriod));
         }
+
+        public static async Task<Tuple<DateTime, DateTime>> ShowDateSelectorPopupAsync()
+        {
+            return await ShowPopup(new DateSelectorPopup());
+        }
+
+        public static async Task<Expense> ShowAddExpensePopupAsync()
+        {
+            return await ShowPopup(new AddExpensePopup());
+        }
+
+        #region Private methods
+
+        private static async Task<T> ShowPopup<T>(BasePopup<T> popup)
+        {
+            try
+            {
+                await PopupNavigation.Instance.PushAsync(popup);
+                var result = await popup.PageClosedTask;
+                await PopupNavigation.Instance.PopAsync();
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        #endregion Private methods
     }
 }

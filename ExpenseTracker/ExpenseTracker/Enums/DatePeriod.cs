@@ -3,7 +3,7 @@ using ExpenseTracker.Helpers;
 
 namespace ExpenseTracker.Enums
 {
-    public enum DatePeriods
+    public enum DatePeriod
     {
         None,
         [Description(ConstantHelper.DailyDatePeriod)]

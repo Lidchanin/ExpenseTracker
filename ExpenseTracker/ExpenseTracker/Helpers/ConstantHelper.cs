@@ -13,6 +13,20 @@
 
         #endregion Enum Descriptions
 
+        #region Shell Titles
+
+        public const string ShellTitle = "ShellTitle";
+
+        public const string ShellFlyoutHeaderTitle = "ShellFlyoutHeaderTitle";
+
+        public const string ShellItemHomeTitle = "Home";
+        public const string ShellItemHomeChartTitle = "Chart";
+        public const string ShellItemHomeListTitle = "List";
+        public const string ShellItemSettingsTitle = "Settings";
+        public const string ShellItemAboutTitle = "About";
+
+        #endregion Shell Titles
+
         #region Page Titles
 
         public const string HomePageTitle = "HomePageTitle";
@@ -22,6 +36,7 @@
         #region Filenames
 
         public const string PlaceholderIcon = "ic_placeholder.png";
+        public const string PlusIcon = "ic_plus.png";
 
         #region Pages icons
 
@@ -52,6 +67,14 @@
 
         #endregion Filenames
 
-        public const string SelectPeriod = "Select period";
+        public const string SelectPeriod = "Select period:";
+        public const string SelectDates = "Select dates:";
+
+        public const string Ok = "OK";
+        public const string Cancel = "Cancel";
+        public const string From = "From";
+        public const string To = "To";
+
+        public const string TotalSumStringFormat = "Total sum = {0}";
     }
 }

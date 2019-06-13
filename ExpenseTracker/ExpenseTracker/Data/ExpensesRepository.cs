@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Data.DTOs;
+using ExpenseTracker.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,56 +12,16 @@ namespace ExpenseTracker.Data
     {
         #region Instance
 
-        private static ExpensesRepository _instance;
+        private static readonly ExpensesRepository _instance;
 
         public static readonly ExpensesRepository
             Instance = _instance ?? (_instance = new ExpensesRepository());
 
         #endregion Instance
 
-        public async Task<List<CategoryWithCostSum>> GetCategoriesWithCostSumAsync()
-        {
-            //SELECT DISTINCT c.Id as CategoryId,
-            //                c.Name as CategoryName,
-            //                ci.FilenameOrFilepath as File,
-            //                c.HexColor as HexColor,
-            //                sum(e.Cost) as TotalCost
-            //FROM    Categories c
-            //        INNER JOIN Expenses e ON e.CategoryId = c.Id
-            //        INNER JOIN CategoryIcons ci ON ci.Id = c.CategoryIconId
-            //GROUP BY c.Id
-            //ORDER BY TotalCost DESC
-            using (var dbContext = new ExpensesDbContext())
-            {
-                return await ExecuteWithGeneralExceptionHandling(async () => await (
-                        from category in dbContext.Categories
-                        join expense in dbContext.Expenses
-                            on category.Id equals expense.CategoryId
-                        join categoryIcon in dbContext.CategoryIcons
-                            on category.CategoryIconId equals categoryIcon.Id
-                        group new
-                        {
-                            category.Id,
-                            category.Name,
-                            File = categoryIcon.FilenameOrFilepath,
-                            category.HexColor,
-                            expense.Cost
-                        } by category.Id
-                        into grouping
-                        select new CategoryWithCostSum()
-                        {
-                            Id = grouping.FirstOrDefault().Id,
-                            Name = grouping.FirstOrDefault().Name,
-                            File = grouping.FirstOrDefault().File,
-                            HexColor = grouping.FirstOrDefault().HexColor,
-                            TotalSum = grouping.Sum(g => g.Cost)
-                        })
-                    .OrderByDescending(r => r.TotalSum)
-                    .ToListAsync());
-            }
-        }
-
-        public async Task<List<CategoryWithCostSum>> GetCategoriesWithCostSumAsync(DateTime startDate, DateTime endDate)
+        public async Task<List<CategoryWithCostSum>> GetCategoriesWithCostSumAsync(
+            DateTime fromDate,
+            DateTime toDate)
         {
             //SELECT DISTINCT c.Id as CategoryId,
             //                c.Name as CategoryName,
@@ -75,33 +36,67 @@ namespace ExpenseTracker.Data
             //ORDER BY TotalCost DESC
             using (var dbContext = new ExpensesDbContext())
             {
-                return await ExecuteWithGeneralExceptionHandling(async () => await (
-                        from category in dbContext.Categories
-                        join expense in dbContext.Expenses
-                            on category.Id equals expense.CategoryId
-                        join categoryIcon in dbContext.CategoryIcons
-                            on category.CategoryIconId equals categoryIcon.Id
-                        where expense.Timestamp >= startDate &&
-                              expense.Timestamp <= endDate
-                        group new
-                        {
-                            category.Id,
-                            category.Name,
-                            File = categoryIcon.FilenameOrFilepath,
-                            category.HexColor,
-                            expense.Cost
-                        } by category.Id
-                        into grouping
-                        select new CategoryWithCostSum()
-                        {
-                            Id = grouping.FirstOrDefault().Id,
-                            Name = grouping.FirstOrDefault().Name,
-                            File = grouping.FirstOrDefault().File,
-                            HexColor = grouping.FirstOrDefault().HexColor,
-                            TotalSum = grouping.Sum(g => g.Cost)
-                        })
-                    .OrderByDescending(r => r.TotalSum)
-                    .ToListAsync());
+                return await ExecuteWithGeneralExceptionHandling(async () =>
+                {
+                    var categoriesWithCostSum = await (
+                            from category in dbContext.Categories
+                            join expense in dbContext.Expenses
+                                on category.Id equals expense.CategoryId
+                            join categoryIcon in dbContext.CategoryIcons
+                                on category.CategoryIconId equals categoryIcon.Id
+                            where expense.Timestamp >= fromDate &&
+                                  expense.Timestamp <= toDate
+                            group new
+                            {
+                                category.Id,
+                                category.Name,
+                                File = categoryIcon.FilenameOrFilepath,
+                                category.HexColor,
+                                expense.Cost
+                            } by category.Id
+                            into grouping
+                            select new CategoryWithCostSum
+                            {
+                                Id = grouping.FirstOrDefault().Id,
+                                Name = grouping.FirstOrDefault().Name,
+                                File = grouping.FirstOrDefault().File,
+                                HexColor = grouping.FirstOrDefault().HexColor,
+                                TotalSum = grouping.Sum(g => g.Cost)
+                            })
+                        .OrderByDescending(r => r.TotalSum)
+                        .ToListAsync();
+
+                    return categoriesWithCostSum;
+                });
+            }
+        }
+
+        public async Task<List<Category>> GetCategoriesAsync()
+        {
+            using (var dbContext = new ExpensesDbContext())
+            {
+                return await ExecuteWithGeneralExceptionHandling(async () =>
+                {
+                    var categories = await dbContext.Categories.ToListAsync();
+
+                    return categories;
+                });
+            }
+        }
+
+        //todo [?] The task result contains the number of state entries written to the database.
+        public async Task<Expense> AddExpenseAsync(Expense expense)
+        {
+            using (var dbContext = new ExpensesDbContext())
+            {
+                return await ExecuteWithGeneralExceptionHandling(async () =>
+                {
+                    var entityExpense = await dbContext.AddAsync(expense);
+                    var dbExpense = entityExpense.Entity;
+                    var numberOfRecords = await dbContext.SaveChangesAsync();
+
+                    return dbExpense;
+                });
             }
         }
 
@@ -113,6 +108,7 @@ namespace ExpenseTracker.Data
             {
                 return await func();
             }
+            //todo [!] Need more exceptions
             catch (Exception e)
             {
                 Console.WriteLine(e);

@@ -1,40 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <pages:BasePage xmlns="http://xamarin.com/schemas/2014/forms"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                 xmlns:donutChart="clr-namespace:ExpenseTracker.Controls.DonutChart;assembly=ExpenseTracker"
                 xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
                 xmlns:pages="clr-namespace:ExpenseTracker.Pages;assembly=ExpenseTracker"
                 xmlns:local="clr-namespace:ExpenseTracker;assembly=ExpenseTracker"
+                xmlns:controls="clr-namespace:ExpenseTracker.Controls;assembly=ExpenseTracker"
                 x:Class="ExpenseTracker.Pages.HomeChartPage"
                 Title="{x:Static helpers:ConstantHelper.HomePageTitle}">
 
+    <!--#region Toolbar items-->
+
     <pages:BasePage.ToolbarItems>
         <ToolbarItem IconImageSource="{x:Static helpers:ConstantHelper.CalendarIcon}"
-                     Clicked="CalendarItem_OnClicked"/>
+                     Command="{Binding CalendarItemCommand}" />
     </pages:BasePage.ToolbarItems>
 
+    <!--#endregion Toolbar items-->
+
     <pages:BasePage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="6*"/>
-            </Grid.RowDefinitions>
+        <Grid Style="{DynamicResource SecondaryGridStyle}">
 
             <donutChart:DonutChartView ItemSource="{Binding ChartItems}"
+                                       HoleCommand="{Binding HoleTouchCommand}"
                                        HolePrimaryText="{Binding HoleText}"
-                                       HolePrimaryTextColor="#16161D"
-                                       DonutSectorCommand="{Binding SectorTouchCommand}"
-                                       DonutHoleCommand="{Binding HoleTouchCommand}"
-                                       SeparatorsWidth="3"
-                                       SeparatorsColor="#16161D"
-                                       HeightRequest="{x:Static local:App.ScreenWidth}"
-                                       WidthRequest="{x:Static local:App.ScreenWidth}"
-                                       HoleRadius="0.3"
-                                       InnerMargin="140"
-                                       DescriptionCircleRadius="50"
-                                       LineToCircleLength="20"
-                                       EmptyStateColor="#FF0000"
-                                       Grid.Row="1"/>
+                                       SectorCommand="{Binding SectorTouchCommand}"
+                                       Style="{StaticResource BaseDonutChartViewStyle}"
+                                       Margin="5" />
+
+            <Button Text="+"
+                    BackgroundColor="{DynamicResource SecondaryColor}"
+                    TextColor="White"
+                    FontSize="Large"
+                    HeightRequest="50"
+                    WidthRequest="50"
+                    CornerRadius="25"
+                    VerticalOptions="End"
+                    HorizontalOptions="End"
+                    Margin="0,0,20,20"
+                    Command="{Binding AddCommand}"/>
         </Grid>
     </pages:BasePage.Content>
 </pages:BasePage>

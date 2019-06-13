@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace ExpenseTracker.ViewModels
 {
-    public class DatePeriodViewModel : BaseViewModel
+    public class DatePeriodSelectorViewModel : BaseViewModel
     {
-        public List<DatePeriods> DatePeriods { get; set; }
+        public List<DatePeriod> DatePeriods { get; set; }
 
-        public DatePeriodViewModel()
+        public DatePeriodSelectorViewModel()
         {
-            DatePeriods = new List<DatePeriods>();
+            DatePeriods = new List<DatePeriod>();
 
             InitData();
         }
@@ -19,9 +19,9 @@ namespace ExpenseTracker.ViewModels
 
         private void InitData()
         {
-            foreach (DatePeriods datePeriod in Enum.GetValues(typeof(DatePeriods)))
+            foreach (DatePeriod datePeriod in Enum.GetValues(typeof(DatePeriod)))
             {
-                if (datePeriod != Enums.DatePeriods.None)
+                if (datePeriod != DatePeriod.None)
                     DatePeriods.Add(datePeriod);
             }
         }

@@ -1,14 +1,230 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:ExpenseTracker.Converters;assembly=ExpenseTracker"
+             xmlns:donutChart="clr-namespace:ExpenseTracker.Controls.DonutChart;assembly=ExpenseTracker"
+             xmlns:local="clr-namespace:ExpenseTracker;assembly=ExpenseTracker"
              x:Class="ExpenseTracker.App">
 
     <Application.Resources>
+        <ResourceDictionary Source="Resources/Themes/IndigoBlueTheme.xaml" />
+
+        <!--#region Styles-->
+
+        <!--#region Shell styles-->
+
+        <Style x:Key="ShellDefaultStyle"
+               TargetType="Shell">
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource ShellBackgroundColor}" />
+            <Setter Property="TitleColor"
+                    Value="{DynamicResource ShellTitleColor}" />
+            <Setter Property="ForegroundColor"
+                    Value="{DynamicResource ShellForegroundColor}" />
+            <Setter Property="UnselectedColor"
+                    Value="{DynamicResource ShellUnselectedColor}" />
+            <Setter Property="DisabledColor"
+                    Value="{DynamicResource ShellDisabledColor}" />
+
+            <Setter Property="FlyoutBackgroundColor"
+                    Value="{DynamicResource ShellFlyoutBackgroundColor}" />
+
+            <Setter Property="TabBarBackgroundColor"
+                    Value="{DynamicResource ShellTabBarBackgroundColor}" />
+            <Setter Property="TabBarTitleColor"
+                    Value="{DynamicResource ShellTabBarTitleColor}" />
+            <Setter Property="TabBarForegroundColor"
+                    Value="{DynamicResource ShellTabBarForegroundColor}" />
+            <Setter Property="TabBarUnselectedColor"
+                    Value="{DynamicResource ShellTabBarUnselectedColor}" />
+            <Setter Property="TabBarDisabledColor"
+                    Value="{DynamicResource ShellTabBarDisabledColor}" />
+
+            <Setter Property="FlyoutHeaderBehavior"
+                    Value="CollapseOnScroll" />
+        </Style>
+
+        <!--#endregion Shell styles-->
+
+        <!--#region Button styles-->
+
+        <Style TargetType="Button">
+            <!--todo [!] Wait material fix-->
+            <!--<Setter Property="Visual"
+                    Value="Material" />-->
+        </Style>
+
+        <!--#endregion Button styles-->
+
+        <!--#region Entry styles-->
+
+        <Style TargetType="Entry">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <!--#endregion Entry styles-->
+
+        <!--#region DatePicker styles-->
+
+        <Style TargetType="DatePicker">
+            <!--todo [!] Wait material fix-->
+            <!--<Setter Property="Visual"
+                    Value="Material" />-->
+        </Style>
+
+        <!--#endregion DatePicker styles-->
+
+        <!--#region Frame styles-->
+
+        <Style TargetType="Frame">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <Style x:Key="PrimaryFrameStyle"
+               TargetType="Grid">
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource PrimaryBaseBackgroundColor}" />
+        </Style>
+
+        <Style x:Key="SecondaryFrameStyle"
+               TargetType="Grid">
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource SecondaryBaseBackgroundColor}" />
+        </Style>
+
+        <!--#endregion Frame styles-->
+
+        <!--#region ProgressBar styles-->
+
+        <Style TargetType="ProgressBar">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <!--#endregion ProgressBar styles-->
+
+        <!--#region TimePicker styles-->
+
+        <Style TargetType="TimePicker">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <!--#endregion TimePicker styles-->
+
+        <!--#region Picker styles-->
+
+        <Style TargetType="Picker">
+            <!--todo [!] Wait material fix-->
+            <!--<Setter Property="Visual"
+                    Value="Material" />-->
+        </Style>
+
+        <!--#endregion Picker styles-->
+
+        <!--#region ActivityIndicator styles-->
+
+        <Style TargetType="ActivityIndicator">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <!--#endregion ActivityIndicator styles-->
+
+        <!--#region Editor styles-->
+
+        <Style TargetType="Editor">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <!--#endregion Editor styles-->
+
+        <!--#region Slider styles-->
+
+        <Style TargetType="Slider">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <!--#endregion Slider styles-->
+
+        <!--#region Stepper styles-->
+
+        <Style TargetType="Stepper">
+            <Setter Property="Visual"
+                    Value="Material" />
+        </Style>
+
+        <!--#endregion Stepper styles-->
+
+        <!--#region Label styles-->
+
+        <!--#endregion Label styles-->
+
+        <!--#region DonutChartView styles-->
+
+        <Style x:Key="BaseDonutChartViewStyle"
+               TargetType="donutChart:DonutChartView">
+            <Setter Property="HoleRadius"
+                    Value="0.3" />
+            <Setter Property="DescriptionCircleRadius"
+                    Value="50" />
+            <Setter Property="LineToCircleLength"
+                    Value="20" />
+            <Setter Property="InnerMargin"
+                    Value="140" />
+            <Setter Property="SeparatorsWidth"
+                    Value="5" />
+            <Setter Property="HeightRequest"
+                    Value="{x:Static local:App.ScreenWidth}" />
+            <Setter Property="WidthRequest"
+                    Value="{x:Static local:App.ScreenWidth}" />
+            <Setter Property="HoleColor"
+                    Value="{DynamicResource PrimaryLightColor}" />
+            <Setter Property="HolePrimaryTextColor"
+                    Value="{DynamicResource TextOnPrimaryColor}" />
+            <Setter Property="SeparatorsColor"
+                    Value="{DynamicResource PrimaryDarkColor}" />
+        </Style>
+
+        <!--#endregion DonutChart styles-->
+
+        <!--#region Grid styles-->
+
+        <Style TargetType="Grid">
+            <Setter Property="RowSpacing"
+                    Value="0" />
+            <Setter Property="ColumnSpacing"
+                    Value="0" />
+        </Style>
+
+        <Style x:Key="PrimaryGridStyle"
+               TargetType="Grid">
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource PrimaryBaseBackgroundColor}" />
+        </Style>
+
+        <Style x:Key="SecondaryGridStyle"
+               TargetType="Grid">
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource SecondaryBaseBackgroundColor}" />
+        </Style>
+
+        <!--#endregion Grid styles-->
+
+        <!--#endregion Styles-->
+
         <!--#region Converters-->
 
-        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
-        
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
+
+        <converters:StringToNullableDoubleConverter x:Key="StringToNullableDoubleConverter" />
+
         <!--#endregion Converters-->
+
     </Application.Resources>
 </Application>

@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Data;
+using ExpenseTracker.Services;
 using System.ComponentModel;
 
 namespace ExpenseTracker.ViewModels
@@ -8,5 +9,6 @@ namespace ExpenseTracker.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected readonly IExpenseRepository ExpenseRepository = ExpensesRepository.Instance;
+        protected readonly PopupService PopupService = PopupService.Instance;
     }
 }

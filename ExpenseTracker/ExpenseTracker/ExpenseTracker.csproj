@@ -15,7 +15,8 @@
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.5.188" />
     <PackageReference Include="SkiaSharp.Views.Forms" Version="1.68.0" />
     <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
-    <PackageReference Include="Xamarin.Forms" Version="4.0.0.425677" />
+    <PackageReference Include="Xamarin.Forms" Version="4.0.0.482894" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.0.0.482894" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,13 +31,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\MaterialDatePicker.xaml.cs">
+      <DependentUpon>MaterialDatePicker.xaml</DependentUpon>
+    </Compile>
     <Compile Update="EFModel1.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>EFModel1.tt</DependentUpon>
     </Compile>
-    <Compile Update="Pages\Popups\DatePeriodPopup.xaml.cs">
-      <DependentUpon>DatePeriodPopup.xaml</DependentUpon>
+    <Compile Update="Pages\Popups\DatePeriodSelectorPopup.xaml.cs">
+      <DependentUpon>DatePeriodSelectorPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Themes\OrangeRedTheme.xaml.cs">
+      <DependentUpon>OrangeRedTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Themes\IndigoBlueTheme.xaml.cs">
+      <DependentUpon>IndigoBlueTheme.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -44,7 +54,13 @@
     <EmbeddedResource Update="AppShell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Controls\MaterialDatePicker.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Pages\AboutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\CategoryDetailsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\HomeChartPage.xaml">
@@ -53,10 +69,22 @@
     <EmbeddedResource Update="Pages\HomeListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Popups\DatePeriodPopup.xaml">
+    <EmbeddedResource Update="Pages\Popups\AddExpensePopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Popups\DatePeriodSelectorPopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\Popups\DateSelectorPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\SettingsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Themes\OrangeRedTheme.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Themes\IndigoBlueTheme.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

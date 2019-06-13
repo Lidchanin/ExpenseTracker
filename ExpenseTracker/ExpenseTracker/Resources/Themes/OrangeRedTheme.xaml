@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="ExpenseTracker.Resources.Themes.OrangeRedTheme">
+
+    <!--#region Scheme Info-->
+
+    <!--Primary     Orange(600)-->
+    <!--Secondary   Red(400)-->
+
+    <!--https://material.io/tools/color/#!/?view.left=0&view.right=0&secondary.color=EF5350&primary.color=FB8C00&primary.text.color=000000&secondary.text.color=000000-->
+
+    <!--#endregion Scheme Info-->
+
+    <!--#region Colors-->
+
+    <!--#region Fundamental colors-->
+
+    <Color x:Key="PrimaryColor">#fb8c00</Color>
+    <Color x:Key="PrimaryLightColor">#ffbd45</Color>
+    <Color x:Key="PrimaryDarkColor">#c25e00</Color>
+
+    <Color x:Key="SecondaryColor">#ef5350</Color>
+    <Color x:Key="SecondaryLightColor">#ff867c</Color>
+    <Color x:Key="SecondaryDarkColor">#b61827</Color>
+
+    <Color x:Key="TextOnPrimaryColor">#000000</Color>
+    <Color x:Key="TextOnSecondaryColor">#000000</Color>
+
+    <Color x:Key="TextOnPrimaryBaseBackgroundColor">#000000</Color>
+    <Color x:Key="TextOnSecondaryBaseBackgroundColor">#000000</Color>
+
+    <Color x:Key="PrimaryBaseBackgroundColor">#f5f5f6</Color>
+    <Color x:Key="SecondaryBaseBackgroundColor">#e1e2e1</Color>
+
+    <!--#endregion Fundamental colors-->
+
+    <!--#region Shell colors-->
+
+    <Color x:Key="ShellBackgroundColor">#fb8c00</Color>
+    <Color x:Key="ShellTitleColor">#000000</Color>
+    <Color x:Key="ShellForegroundColor">#000000</Color>
+    <Color x:Key="ShellUnselectedColor">#ef5350</Color>
+    <Color x:Key="ShellDisabledColor">#ef5350</Color>
+
+    <Color x:Key="ShellFlyoutBackgroundColor">#f5f5f6</Color>
+
+    <Color x:Key="ShellTabBarBackgroundColor">#ffbd45</Color>
+    <Color x:Key="ShellTabBarTitleColor">#000000</Color>
+    <Color x:Key="ShellTabBarForegroundColor">#000000</Color>
+    <Color x:Key="ShellTabBarUnselectedColor">#ff867c</Color>
+    <Color x:Key="ShellTabBarDisabledColor">#ff867c</Color>
+
+    <!--#endregion Shell colors-->
+
+    <!--#endregion Colors-->
+
+</ResourceDictionary>

@@ -1,5 +1,4 @@
 ﻿using ExpenseTracker.Helpers;
-using System;
 using Xamarin.Forms.Xaml;
 
 namespace ExpenseTracker.Pages

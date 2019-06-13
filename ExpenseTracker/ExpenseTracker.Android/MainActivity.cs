@@ -2,6 +2,8 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using Plugin.CurrentActivity;
+using Rg.Plugins.Popup;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Platform = Xamarin.Essentials.Platform;
@@ -24,9 +26,12 @@ namespace ExpenseTracker.Droid
             base.OnCreate(savedInstanceState);
 
             Forms.SetFlags("CollectionView_Experimental");
-            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
+            Popup.Init(this, savedInstanceState);
+            CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
             Forms.Init(this, savedInstanceState);
+
+            FormsMaterial.Init(this, savedInstanceState);
 
             Platform.Init(this, savedInstanceState);
 
@@ -43,13 +48,9 @@ namespace ExpenseTracker.Droid
 
         public override void OnBackPressed()
         {
-            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            if (Popup.SendBackPressed(base.OnBackPressed))
             {
                 // Do something if there are some pages in the `PopupStack`
-            }
-            else
-            {
-                // Do something if there are not any pages in the `PopupStack`
             }
         }
     }

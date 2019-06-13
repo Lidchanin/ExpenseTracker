@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:ExpenseTracker.Controls;assembly=ExpenseTracker"
+             x:Class="ExpenseTracker.Controls.MaterialDatePicker">
+
+    <ContentView.Content>
+        <Grid ColumnSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1"/>
+            </Grid.RowDefinitions>
+
+            <controls:BorderlessDatePicker x:Name="Picker"
+                                           Opacity="0" 
+                                           Margin="0,12,0,0"/>
+
+            <Label x:Name="HiddenLabel" 
+                   FontSize="10" 
+                   IsVisible="False" 
+                   Margin="0"
+                   Grid.Row="0"/>
+
+            <controls:BorderlessEntry x:Name="EntryField" 
+                                      IsKeyboardEnabled="False" 
+                                      IsTextPredictionEnabled="False"
+                                      IsSpellCheckEnabled="False"
+                                      Margin="0,12,0,0"
+                                      Grid.Row="0"/>
+
+            <BoxView x:Name="BottomBorder" 
+                     HeightRequest="1"
+                     Margin="0"
+                     HorizontalOptions="FillAndExpand"
+                     Grid.Row="1"/>
+
+            <BoxView x:Name="HiddenBottomBorder"
+                     Grid.Row="1" 
+                     HeightRequest="1" 
+                     Margin="0" 
+                     WidthRequest="0" 
+                     HorizontalOptions="Start"/>
+        </Grid>
+    </ContentView.Content>
+</ContentView>
