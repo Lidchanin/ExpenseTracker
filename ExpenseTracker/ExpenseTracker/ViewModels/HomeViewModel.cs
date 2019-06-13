@@ -7,6 +7,7 @@ using ExpenseTracker.Models;
 using ExpenseTracker.Services;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
@@ -23,7 +24,6 @@ namespace ExpenseTracker.ViewModels
         public ObservableCollection<DonutChartItem> ChartItems { get; set; }
 
         public ICommand CalendarItemCommand { get; }
-
         public ICommand SectorTouchCommand { get; }
         public ICommand HoleTouchCommand { get; }
 
@@ -133,9 +133,10 @@ namespace ExpenseTracker.ViewModels
 
         private async void SectorTouchExecute(object commandParameter)
         {
-            await Shell.Current.GoToAsync(
-                $"{RoutingHelper.HomeChartCategoryDetails}" +
-                $"?{RoutingHelper.CategoryId}={commandParameter}");
+            Debug.WriteLine($"__________________________  {commandParameter}");
+            //await Shell.Current.GoToAsync(
+            //    $"{RoutingHelper.HomeChartCategoryDetails}" +
+            //    $"?{RoutingHelper.CategoryId}={commandParameter}");
         }
 
         private async void HoleTouchExecute()
