@@ -9,6 +9,7 @@
                   xmlns:viewModels="clr-namespace:ExpenseTracker.ViewModels;assembly=ExpenseTracker"
                   xmlns:helpers="clr-namespace:ExpenseTracker.Helpers;assembly=ExpenseTracker"
                   xmlns:models="clr-namespace:ExpenseTracker.Models;assembly=ExpenseTracker"
+                  xmlns:behaviors="clr-namespace:ExpenseTracker.Behaviors;assembly=ExpenseTracker"
                   x:Class="ExpenseTracker.Pages.Popups.AddExpensePopup"
                   x:TypeArguments="models:Expense">
 
@@ -83,17 +84,21 @@
                    ReturnType="Next"
                    Grid.Row="1"
                    Grid.Column="0"
-                   Grid.ColumnSpan="3" />
+                   Grid.ColumnSpan="3">
+                <Entry.Behaviors>
+                    <behaviors:NextEntryBehavior NextEntry="{x:Reference CostEntry}" />
+                </Entry.Behaviors>
+            </Entry>
 
-            <Entry Text="{Binding Cost, Converter={StaticResource StringToNullableDoubleConverter}}"
+            <Entry x:Name="CostEntry"
+                   Text="{Binding Cost, Converter={StaticResource StringToNullableDoubleConverter}}"
                    MaxLength="10"
                    Placeholder="Cost"
                    PlaceholderColor="DimGray"
                    Keyboard="Numeric"
                    Grid.Row="2"
                    Grid.Column="0"
-                   Grid.ColumnSpan="3">
-            </Entry>
+                   Grid.ColumnSpan="3" />
 
             <DatePicker Date="{Binding Timestamp}"
                         Grid.Row="3"
